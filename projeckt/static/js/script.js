@@ -16,14 +16,23 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(response => response.json())
             .then(data => {
                 if (data.errors) {
-                    // Очищаем предыдущие ошибки
-                    formErrors.innerHTML = '';
+                    // Очищаем предыдущие ошибки под полями
+                    const errorSpans = document.querySelectorAll('.error');
+                    errorSpans.forEach(span => {
+                        span.textContent = '';
+                    });
 
-                    // Выводим новые ошибки
+                    // Выводим ошибки под соответствующими полями
                     for (const key in data.errors) {
-                        const error = document.createElement('p');
-                        error.textContent = data.errors[key];
-                        formErrors.appendChild(error);
+                        const errorSpan = document.getElementById(key + '-error');
+                        if (errorSpan) {
+                            errorSpan.textContent = data.errors[key];
+                        } else {
+                            // Если нет соответствующего элемента, выводим в общую ошибку
+                            const error = document.createElement('p');
+                            error.textContent = data.errors[key];
+                            formErrors.appendChild(error);
+                        }
                     }
                 } else {
                     // Если ошибок нет, можно обновить страницу или показать сообщение об успехе
@@ -42,6 +51,8 @@ document.addEventListener('DOMContentLoaded', function() {
     timeSelectors.forEach(selector => {
         selector.addEventListener('click', function(event) {
             const target = event.target;
+
+            // Проверяем, является ли target элементом .time-value
             if (target.classList.contains('time-value')) {
                 const action = target.dataset.action;
                 const targetInput = target.dataset.target;
@@ -50,6 +61,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 if (inputElement && displayElement) {
                     let currentValue = parseInt(inputElement.value);
+
+                    // Проверяем, является ли currentValue NaN
+                    if (isNaN(currentValue)) {
+                        currentValue = 0; // Устанавливаем значение по умолчанию
+                    }
+
                     let maxValue = targetInput.includes('hours') ? 23 : 59;
                     let minValue = 0;
 
@@ -65,4 +82,39 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     });
+
+    // Добавляем обработчики событий для валидации в реальном времени
+    const ageInput = document.getElementById('age');
+    const weightInput = document.getElementById('weight');
+
+    if (ageInput) {
+        ageInput.addEventListener('input', function() {
+            validateNumber(this, 'age-error', 'Возраст должен быть числом.');
+        });
+    }
+
+    if (weightInput) {
+        weightInput.addEventListener('input', function() {
+            validateNumber(this, 'weight-error', 'Вес должен быть числом.');
+        });
+    }
+
+    // Функция для валидации числовых полей
+    function validateNumber(input, errorId, errorMessage) {
+    const value = input.value;
+    const errorSpan = document.getElementById(errorId);
+
+    if (isNaN(value)) {
+        errorSpan.textContent = errorMessage;
+    } else {
+        const numberValue = parseFloat(value);
+        if (numberValue < 0) {
+            errorSpan.textContent = "Значение должно быть положительным.";
+        } else {
+            errorSpan.textContent = '';
+        }
+    }
+}
+
+
 });
