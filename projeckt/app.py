@@ -221,27 +221,29 @@ def profile():
             profile.wake_up_time_saturday_minutes = wake_up_time_saturday_minutes
             profile.wake_up_time_sunday_hours = wake_up_time_sunday_hours
             profile.wake_up_time_sunday_minutes = wake_up_time_sunday_minutes
+            
         else:  # Создаем новый профиль
             profile = UserProfile(
                 age=age,
                 weight=weight,
-                wake_up_time_monday_hours=wake_up_time_monday_hours,
-                wake_up_time_monday_minutes=wake_up_time_monday_minutes,
-                wake_up_time_tuesday_hours=wake_up_time_tuesday_hours,
-                wake_up_time_tuesday_minutes=wake_up_time_tuesday_minutes,
-                wake_up_time_wednesday_hours=wake_up_time_wednesday_hours,
-                wake_up_time_wednesday_minutes=wake_up_time_wednesday_minutes,
-                wake_up_time_thursday_hours=wake_up_time_thursday_hours,
-                wake_up_time_thursday_minutes=wake_up_time_thursday_minutes,
-                wake_up_time_friday_hours=wake_up_time_friday_hours,
-                wake_up_time_friday_minutes=wake_up_time_friday_minutes,
-                wake_up_time_saturday_hours=wake_up_time_saturday_hours,
-                wake_up_time_saturday_minutes=wake_up_time_saturday_minutes,
-                wake_up_time_sunday_hours=wake_up_time_sunday_hours,
-                wake_up_time_sunday_minutes=wake_up_time_sunday_minutes,
+                wake_up_time_monday_hours=int(wake_up_time_monday_hours),  # Преобразуем в int
+                wake_up_time_monday_minutes=int(wake_up_time_monday_minutes),  # Преобразуем в int
+                wake_up_time_tuesday_hours=int(wake_up_time_tuesday_hours),  # Преобразуем в int
+                wake_up_time_tuesday_minutes=int(wake_up_time_tuesday_minutes),  # Преобразуем в int
+                wake_up_time_wednesday_hours=int(wake_up_time_wednesday_hours),  # Преобразуем в int
+                wake_up_time_wednesday_minutes=int(wake_up_time_wednesday_minutes),  # Преобразуем в int
+                wake_up_time_thursday_hours=int(wake_up_time_thursday_hours),  # Преобразуем в int
+                wake_up_time_thursday_minutes=int(wake_up_time_thursday_minutes),  # Преобразуем в int
+                wake_up_time_friday_hours=int(wake_up_time_friday_hours),  # Преобразуем в int
+                wake_up_time_friday_minutes=int(wake_up_time_friday_minutes),  # Преобразуем в int
+                wake_up_time_saturday_hours=int(wake_up_time_saturday_hours),  # Преобразуем в int
+                wake_up_time_saturday_minutes=int(wake_up_time_saturday_minutes),  # Преобразуем в int
+                wake_up_time_sunday_hours=int(wake_up_time_sunday_hours),  # Преобразуем в int
+                wake_up_time_sunday_minutes=int(wake_up_time_sunday_minutes),  # Преобразуем в int
                 user_id=current_user.id
             )  # Связываем с пользователем
             db.session.add(profile)
+
 
         db.session.commit()
 
