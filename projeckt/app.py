@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, jsonify
+from flask import Flask, render_template, request, redirect, url_for, jsonify, flash
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -64,7 +64,6 @@ class Recommendations(db.Model):
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
-
 
 def calculate_recommendations(age, weight, wake_up_time_hours, wake_up_time_minutes):
     """
@@ -258,15 +257,18 @@ def profile():
             # Сохраняем рекомендации в базе данных
             if profile.recommendations:
                 recommendations = profile.recommendations
-                recommendations.bedtime = recommendations_data['bedtime']
+                recommendations.bedtime_hours = recommendations_data['bedtime_hours']
+                recommendations.bedtime_minytes = recommendations_data['bedtime_minytes']
             else:
-                recommendations = Recommendations(bedtime=recommendations_data['bedtime'], user_profile_id=profile.id)
-                db.session.add(recommendations)
+                recommendation_hours = Recommendations(bedtime_hours=recommendations_data['bedtime_hours'], user_profile_id=profile.id)
+                recommendation_minytes = Recommendations(bedtime_minytes=recommendations_data['bedtime_minytes'], user_profile_id=profile.id)
+                db.session.add(recommendation_hours, recommendation_minytes)
 
             db.session.commit()
 
             # Возвращаем JSON с рекомендациями
             return jsonify(recommendations_data)
+        
         except ValueError as e:
             db.session.rollback()
             return jsonify({'errors': {'weight': 'Некорректный формат числа'}})
@@ -277,18 +279,34 @@ def profile():
         else:
             return render_template('profile.html')
 
-
-# Маршрут регистрации
-@app.route('/register', methods=['POST', 'GET'])
+@app.route('/check_username')
+def check_username():
+    username = request.args.get('username')
+    existing_user = User.query.filter_by(username=username).first()
+    if existing_user:
+        return jsonify({'exists': True})
+    else:
+        return jsonify({'exists': False})
+      
+@app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
-        hashed_password = generate_password_hash(password)  # Используем bcrypt по умолчанию
+        username = request.form.get('username')
+        password = request.form.get('password')
+
+        # Проверяем, существует ли пользователь с таким логином
+        existing_user = User.query.filter_by(username=username).first()
+        if existing_user:
+            flash('Пользователь с таким логином уже существует.', 'error')
+            return redirect(url_for('register'))
+
+        hashed_password = generate_password_hash(password)
         new_user = User(username=username, password=hashed_password)
         db.session.add(new_user)
         db.session.commit()
+
         return redirect(url_for('login'))
+
     return render_template('register.html')
 
 
