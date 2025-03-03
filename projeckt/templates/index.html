@@ -1,16 +1,15 @@
-
 {% extends "layout.html" %}
 
 {% block title %}Главная страница{% endblock %}
 
 {% block content %}
-    <div class="container index-page"></div>
+    <div class="container index-page">
         <h2>Рекомендации</h2>
-        {% if recommendations %}
-            <p>Рекомендуемое время отхода ко сну: <span id="bedtime">{{ "%02d:%02d"|format(recommendations.bedtime_hours, recommendations.bedtime_minutes) }}</span></p>
-        {% else %}
-            <p>Пожалуйста, заполните свой профиль, чтобы получить рекомендации.</p>
-        {% endif %}
-    </div>
+            {% if bedtime_hours is not none and bedtime_minytes is not none %}
+                <p>Рекомендуемое время отхода ко сну: <span id="bedtime">{{ "%02d:%02d"|format(bedtime_hours, bedtime_minytes) }}</span></p>
+            {% else %}
+                <p>Пожалуйста, заполните свой профиль, чтобы получить рекомендации.</p>
+            {% endif %}
+        </div>
 {% endblock %}
 
