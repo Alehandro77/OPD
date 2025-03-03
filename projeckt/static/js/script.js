@@ -118,3 +118,25 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 });
+
+document.addEventListener('DOMContentLoaded', function() {
+    const usernameInput = document.getElementById('username');
+    const usernameError = document.createElement('span');
+    usernameError.classList.add('error');
+    usernameInput.parentNode.appendChild(usernameError);
+
+    usernameInput.addEventListener('input', function() {
+        const username = this.value;
+
+        // Отправляем AJAX запрос на сервер
+        fetch('/check_username?username=' + username)
+            .then(response => response.json())
+            .then(data => {
+                if (data.exists) {
+                    usernameError.textContent = 'Пользователь с таким логином уже существует.';
+                } else {
+                    usernameError.textContent = '';
+                }
+            });
+    });
+});
