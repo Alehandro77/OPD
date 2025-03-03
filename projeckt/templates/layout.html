@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="header">
+        <h1>День в фокусе</h1>
+    </div>
+
+    <div class="container">
+        {% block content %}{% endblock %}
+    </div>
+
+    <nav>
+        <ul>
+            <li>
+                <a href="{{ url_for('index') }}">
+                    <img src="{{ url_for('static', filename='img/home.png') }}" alt="Главная" width="32" height="32">
+                    Главная
+                </a>
+            </li>
+            <li>
+                <a href="{{ url_for('profile') }}">
+                    <img src="{{ url_for('static', filename='img/profile.png') }}" alt="Профиль" width="32" height="32">
+                    Профиль
+                </a>
+            </li>
+            <li>
+                <a href="{{ url_for('logout') }}">
+                    <img src="{{ url_for('static', filename='img/logout.png') }}" alt="Выйти" width="32" height="32">
+                    Выйти
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
+
