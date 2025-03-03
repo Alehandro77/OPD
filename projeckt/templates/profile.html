@@ -1,53 +1,10 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Профиль</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <style>
-        .error {
-            color: red;
-        }
+{% extends "layout.html" %}
 
-        /* Стили для "карусели" */
-        .time-selector {
-            display: flex;
-            align-items: center;
-        }
+{% block title %}Профиль{% endblock %}
 
-        .time-value {
-            width: 30px;
-            text-align: center;
-            font-size: 1.2em;
-            cursor: pointer;
-            user-select: none;
-        }
-
-        .time-value.faded {
-            color: #ccc; /* Более бледный цвет */
-        }
-
-        .time-value.current {
-            font-weight: bold;
-        }
-
-        .time-separator {
-            margin: 0 5px;
-            font-size: 1.2em;
-        }
-    </style>
-</head>
-<body>
-    <nav>
-        <ul>
-            <li><a href="{{ url_for('index') }}">Главная</a></li>
-            <li><a href="{{ url_for('profile') }}">Профиль</a></li>
-            <li><a href="{{ url_for('logout') }}">Выйти</a></li>
-        </ul>
-    </nav>
-    <div class="container">
-        <h2>Профиль</h2>
+{% block content %}
+    <div class="container profile-page">
+        <h2>Профиль пользователя</h2>
         <div id="form-errors" class="error"></div>
         <form method="post" action="{{ url_for('profile') }}" data-profile-url="{{ url_for('profile') }}">
             <label for="age">Возраст:</label><br>
@@ -110,83 +67,82 @@
                 </div>
                 <div class="time-value faded" data-action="increment" data-target="wake_up_time_wednesday_minutes">+</div>
             </div>
-            <span id="wake_up_time_wednesday-error" class="error"></span><br><br>            
+            <span id="wake_up_time_wednesday-error" class="error"></span><br><br>
 
-        <label>Во сколько вам нужно проснуться в четверг?:</label><br>
-        <div class="time-selector">
-            <div class="time-value faded" data-action="decrement" data-target="wake_up_time_thursday_hours">-</div>
-            <div class="time-value current" data-value="wake_up_time_thursday_hours">
-                <span id="wake_up_time_thursday_hours_display">{{ "%02d"|format(profile.wake_up_time_thursday_hours) if profile else "00" }}</span>
-                <input type="hidden" id="wake_up_time_thursday_hours" name="wake_up_time_thursday_hours" value="{{ profile.wake_up_time_thursday_hours if profile else "0" }}">
-            </div>
-            <div class="time-value faded" data-action="increment" data-target="wake_up_time_thursday_hours">+</div>
-            <span class="time-separator">:</span>
-            <div class="time-value faded" data-action="decrement" data-target="wake_up_time_thursday_minutes">-</div>
-            <div class="time-value current" data-value="wake_up_time_thursday_minutes">
-                <span id="wake_up_time_thursday_minutes_display">{{ "%02d"|format(profile.wake_up_time_thursday_minutes) if profile else "00" }}</span>
-                <input type="hidden" id="wake_up_time_thursday_minutes" name="wake_up_time_thursday_minutes" value="{{ profile.wake_up_time_thursday_minutes if profile else "0" }}">
-            </div>
-            <div class="time-value faded" data-action="increment" data-target="wake_up_time_thursday_minutes">+</div>
-        </div>
-        <span id="wake_up_time_thursday-error" class="error"></span><br><br>
-
-        <label>Во сколько вам нужно проснуться в пятницу?:</label><br>
-        <div class="time-selector">
-            <div class="time-value faded" data-action="decrement" data-target="wake_up_time_friday_hours">-</div>
-            <div class="time-value current" data-value="wake_up_time_friday_hours">
-                <span id="wake_up_time_friday_hours_display">{{ "%02d"|format(profile.wake_up_time_friday_hours) if profile else "00" }}</span>
-                <input type="hidden" id="wake_up_time_friday_hours" name="wake_up_time_friday_hours" value="{{ profile.wake_up_time_friday_hours if profile else "0" }}">
-            </div>
-            <div class="time-value faded" data-action="increment" data-target="wake_up_time_friday_hours">+</div>
-            <span class="time-separator">:</span>
-            <div class="time-value faded" data-action="decrement" data-target="wake_up_time_friday_minutes">-</div>
-            <div class="time-value current" data-value="wake_up_time_friday_minutes">
-                <span id="wake_up_time_friday_minutes_display">{{ "%02d"|format(profile.wake_up_time_friday_minutes) if profile else "00" }}</span>
-                <input type="hidden" id="wake_up_time_friday_minutes" name="wake_up_time_friday_minutes" value="{{ profile.wake_up_time_friday_minutes if profile else "0" }}">
-            </div>
-            <div class="time-value faded" data-action="increment" data-target="wake_up_time_friday_minutes">+</div>
-        </div>
-        <span id="wake_up_time_friday-error" class="error"></span><br><br>
-
-        <label>Во сколько вам нужно проснуться в субботу?:</label><br>
-        <div class="time-selector">
-            <div class="time-value faded" data-action="decrement" data-target="wake_up_time_saturday_hours">-</div>
-            <div class="time-value current" data-value="wake_up_time_saturday_hours">
-                <span id="wake_up_time_saturday_hours_display">{{ "%02d"|format(profile.wake_up_time_saturday_hours) if profile else "00" }}</span>
-                <input type="hidden" id="wake_up_time_saturday_hours" name="wake_up_time_saturday_hours" value="{{ profile.wake_up_time_saturday_hours if profile else "0" }}">
-            </div>
-            <div class="time-value faded" data-action="increment" data-target="wake_up_time_saturday_hours">+</div>
-            <span class="time-separator">:</span>
-            <div class="time-value faded" data-action="decrement" data-target="wake_up_time_saturday_minutes">-</div>
-            <div class="time-value current" data-value="wake_up_time_saturday_minutes">
-                <span id="wake_up_time_saturday_minutes_display">{{ "%02d"|format(profile.wake_up_time_saturday_minutes) if profile else "00" }}</span>
-                <input type="hidden" id="wake_up_time_saturday_minutes" name="wake_up_time_saturday_minutes" value="{{ profile.wake_up_time_saturday_minutes if profile else "0" }}">
-            </div>
-            <div class="time-value faded" data-action="increment" data-target="wake_up_time_saturday_minutes">+</div>
-        </div>
-        <span id="wake_up_time_saturday-error" class="error"></span><br><br>
-
-        <label>Во сколько вам нужно проснуться в воскресенье?:</label><br>
-        <div class="time-selector">
-            <div class="time-value faded" data-action="decrement" data-target="wake_up_time_sunday_hours">-</div>
-            <div class="time-value current" data-value="wake_up_time_sunday_hours">
-                <span id="wake_up_time_sunday_hours_display">{{ "%02d"|format(profile.wake_up_time_sunday_hours) if profile else "00" }}</span>
-                <input type="hidden" id="wake_up_time_sunday_hours" name="wake_up_time_sunday_hours" value="{{ profile.wake_up_time_sunday_hours if profile else "0" }}">
-            </div>
-            <div class="time-value faded" data-action="increment" data-target="wake_up_time_sunday_hours">+</div>
-            <span class="time-separator">:</span>
-            <div class="time-value faded" data-action="decrement" data-target="wake_up_time_sunday_minutes">-</div>
-            <div class="time-value current" data-value="wake_up_time_sunday_minutes">
-                <span id="wake_up_time_sunday_minutes_display">{{ "%02d"|format(profile.wake_up_time_sunday_minutes) if profile else "00" }}</span>
-                <input type="hidden" id="wake_up_time_sunday_minutes" name="wake_up_time_sunday_minutes" value="{{ profile.wake_up_time_sunday_minutes if profile else "0" }}">
-            </div>
-            <div class="time-value faded" data-action="increment" data-target="wake_up_time_sunday_minutes">+</div>
-        </div>
-        <span id="wake_up_time_sunday-error" class="error"></span><br><br>
-
-        <button type="submit">Сохранить</button>
+            <label>Во сколько вам нужно проснуться в четверг?:</label><br>
+            <div class="time-selector">
+                <div class="time-value faded" data-action="decrement" data-target="wake_up_time_thursday_hours">-</div>
+                <div class="time-value current" data-value="wake_up_time_thursday_hours">
+                    <span id="wake_up_time_thursday_hours_display">
+                        {{ "%02d"|format(profile.wake_up_time_thursday_hours) if profile else "00" }}</span>
+                        <input type="hidden" id="wake_up_time_thursday_hours" name="wake_up_time_thursday_hours" value="{{ profile.wake_up_time_thursday_hours if profile else "0" }}">
+                    </div>
+                    <div class="time-value faded" data-action="increment" data-target="wake_up_time_thursday_hours">+</div>
+                    <span class="time-separator">:</span>
+                    <div class="time-value faded" data-action="decrement" data-target="wake_up_time_thursday_minutes">-</div>
+                    <div class="time-value current" data-value="wake_up_time_thursday_minutes">
+                        <span id="wake_up_time_thursday_minutes_display">{{ "%02d"|format(profile.wake_up_time_thursday_minutes) if profile else "00" }}</span>
+                        <input type="hidden" id="wake_up_time_thursday_minutes" name="wake_up_time_thursday_minutes" value="{{ profile.wake_up_time_thursday_minutes if profile else "0" }}">
+                    </div>
+                    <div class="time-value faded" data-action="increment" data-target="wake_up_time_thursday_minutes">+</div>
+                </div>
+                <span id="wake_up_time_thursday-error" class="error"></span><br><br>
+    
+                <label>Во сколько вам нужно проснуться в пятницу?:</label><br>
+                <div class="time-selector">
+                    <div class="time-value faded" data-action="decrement" data-target="wake_up_time_friday_hours">-</div>
+                    <div class="time-value current" data-value="wake_up_time_friday_hours">
+                        <span id="wake_up_time_friday_hours_display">{{ "%02d"|format(profile.wake_up_time_friday_hours) if profile else "00" }}</span>
+                        <input type="hidden" id="wake_up_time_friday_hours" name="wake_up_time_friday_hours" value="{{ profile.wake_up_time_friday_hours if profile else "0" }}">
+                    </div>
+                    <div class="time-value faded" data-action="increment" data-target="wake_up_time_friday_hours">+</div>
+                    <span class="time-separator">:</span>
+                    <div class="time-value faded" data-action="decrement" data-target="wake_up_time_friday_minutes">-</div>
+                    <div class="time-value current" data-value="wake_up_time_friday_minutes">
+                        <span id="wake_up_time_friday_minutes_display">{{ "%02d"|format(profile.wake_up_time_friday_minutes) if profile else "00" }}</span>
+                        <input type="hidden" id="wake_up_time_friday_minutes" name="wake_up_time_friday_minutes" value="{{ profile.wake_up_time_friday_minutes if profile else "0" }}">
+                    </div>
+                    <div class="time-value faded" data-action="increment" data-target="wake_up_time_friday_minutes">+</div>
+                </div>
+                <span id="wake_up_time_friday-error" class="error"></span><br><br>
+    
+                <label>Во сколько вам нужно проснуться в субботу?:</label><br>
+                <div class="time-selector">
+                    <div class="time-value faded" data-action="decrement" data-target="wake_up_time_saturday_hours">-</div>
+                    <div class="time-value current" data-value="wake_up_time_saturday_hours">
+                        <span id="wake_up_time_saturday_hours_display">{{ "%02d"|format(profile.wake_up_time_saturday_hours) if profile else "00" }}</span>
+                        <input type="hidden" id="wake_up_time_saturday_hours" name="wake_up_time_saturday_hours" value="{{ profile.wake_up_time_saturday_hours if profile else "0" }}">
+                    </div>
+                    <div class="time-value faded" data-action="increment" data-target="wake_up_time_saturday_hours">+</div>
+                    <span class="time-separator">:</span>
+                    <div class="time-value faded" data-action="decrement" data-target="wake_up_time_saturday_minutes">-</div>
+                    <div class="time-value current" data-value="wake_up_time_saturday_minutes">
+                        <span id="wake_up_time_saturday_minutes_display">{{ "%02d"|format(profile.wake_up_time_saturday_minutes) if profile else "00" }}</span>
+                        <input type="hidden" id="wake_up_time_saturday_minutes" name="wake_up_time_saturday_minutes" value="{{ profile.wake_up_time_saturday_minutes if profile else "0" }}">
+                    </div>
+                    <div class="time-value faded" data-action="increment" data-target="wake_up_time_saturday_minutes">+</div>
+                </div>
+                <span id="wake_up_time_saturday-error" class="error"></span><br><br>
+    
+                <label>Во сколько вам нужно проснуться в воскресенье?:</label><br>
+                <div class="time-selector">
+                    <div class="time-value faded" data-action="decrement" data-target="wake_up_time_sunday_hours">-</div>
+                    <div class="time-value current" data-value="wake_up_time_sunday_hours">
+                        <span id="wake_up_time_sunday_hours_display">{{ "%02d"|format(profile.wake_up_time_sunday_hours) if profile else "00" }}</span>
+                        <input type="hidden" id="wake_up_time_sunday_hours" name="wake_up_time_sunday_hours" value="{{ profile.wake_up_time_sunday_hours if profile else "0" }}">
+                    </div>
+                    <div class="time-value faded" data-action="increment" data-target="wake_up_time_sunday_hours">+</div>
+                    <span class="time-separator">:</span>
+                    <div class="time-value faded" data-action="decrement" data-target="wake_up_time_sunday_minutes">-</div>
+                    <div class="time-value current" data-value="wake_up_time_sunday_minutes">
+                        <span id="wake_up_time_sunday_minutes_display">{{ "%02d"|format(profile.wake_up_time_sunday_minutes) if profile else "00" }}</span>
+                        <input type="hidden" id="wake_up_time_sunday_minutes" name="wake_up_time_sunday_minutes" value="{{ profile.wake_up_time_sunday_minutes if profile else "0" }}">
+                    </div>
+                    <div class="time-value faded" data-action="increment" data-target="wake_up_time_sunday_minutes">+</div>
+                </div>
+                <span id="wake_up_time_sunday-error" class="error"></span><br><br>
+    
+                <button type="submit">Сохранить</button>
         </form>
     </div>
-    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
-    </body>
-</html>
+{% endblock %}
