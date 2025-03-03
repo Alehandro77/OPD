@@ -17,7 +17,7 @@ body {
 }
 
 .index-page {
-    padding-top: 45px; /* Отступ сверху для главной страницы */
+    padding-top: 70px; /* Отступ сверху для главной страницы */
 
 }
 
@@ -180,4 +180,18 @@ nav img {
 .time-separator {
     margin: 0 5px;
     font-size: 1.2em;
+}
+
+.flashes {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 15px;
+}
+
+.flashes li.error {
+    color: red;
+    background-color: #ffe6e6;
+    padding: 10px;
+    border: 1px solid red;
+    border-radius: 4px;
 }
