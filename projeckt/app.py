@@ -112,160 +112,165 @@ def profile():
     errors = {}  # Создаем словарь для хранения ошибок
 
     if request.method == 'POST':
-        age = request.form['age']
-        weight = request.form['weight']
-        wake_up_time_monday_hours = request.form['wake_up_time_monday_hours']
-        wake_up_time_monday_minutes = request.form['wake_up_time_monday_minutes']
-        wake_up_time_tuesday_hours = request.form['wake_up_time_tuesday_hours']
-        wake_up_time_tuesday_minutes = request.form['wake_up_time_tuesday_minutes']
-        wake_up_time_wednesday_hours = request.form['wake_up_time_wednesday_hours']
-        wake_up_time_wednesday_minutes = request.form['wake_up_time_wednesday_minutes']
-        wake_up_time_thursday_hours = request.form['wake_up_time_thursday_hours']
-        wake_up_time_thursday_minutes = request.form['wake_up_time_thursday_minutes']
-        wake_up_time_friday_hours = request.form['wake_up_time_friday_hours']
-        wake_up_time_friday_minutes = request.form['wake_up_time_friday_minutes']
-        wake_up_time_saturday_hours = request.form['wake_up_time_saturday_hours']
-        wake_up_time_saturday_minutes = request.form['wake_up_time_saturday_minutes']
-        wake_up_time_sunday_hours = request.form['wake_up_time_sunday_hours']
-        wake_up_time_sunday_minutes = request.form['wake_up_time_sunday_minutes']
-
-        # Валидация данных на стороне сервера
         try:
-            age = int(age)
-            if age <= 0:
-                errors['age'] = "Возраст должен быть положительным числом."
-        except ValueError:
-            errors['age'] = "Возраст должен быть числом."
+            age = int(request.form['age'])
+            weight = float(request.form['weight'])
 
-        try:
-            weight = float(weight)
-            if weight <= 0:
-                errors['weight'] = "Вес должен быть положительным числом."
-        except ValueError:
-            errors['weight'] = "Вес должен быть числом."
+            wake_up_time_monday_hours = int(request.form['wake_up_time_monday_hours'])
+            wake_up_time_monday_minutes = int(request.form['wake_up_time_monday_minutes'])
+            wake_up_time_tuesday_hours = int(request.form['wake_up_time_tuesday_hours'])
+            wake_up_time_tuesday_minutes = int(request.form['wake_up_time_tuesday_minutes'])
+            wake_up_time_wednesday_hours = int(request.form['wake_up_time_wednesday_hours'])
+            wake_up_time_wednesday_minutes = int(request.form['wake_up_time_wednesday_minutes'])
+            wake_up_time_thursday_hours = int(request.form['wake_up_time_thursday_hours'])
+            wake_up_time_thursday_minutes = int(request.form['wake_up_time_thursday_minutes'])
+            wake_up_time_friday_hours = int(request.form['wake_up_time_friday_hours'])
+            wake_up_time_friday_minutes = int(request.form['wake_up_time_friday_minutes'])
+            wake_up_time_saturday_hours = int(request.form['wake_up_time_saturday_hours'])
+            wake_up_time_saturday_minutes = int(request.form['wake_up_time_saturday_minutes'])
+            wake_up_time_sunday_hours = int(request.form['wake_up_time_sunday_hours'])
+            wake_up_time_sunday_minutes = int(request.form['wake_up_time_sunday_minutes'])
 
-        def validate_wake_up_time(hours, minutes):
+            # Валидация данных на стороне сервера
             try:
-                hours = int(hours)
-                minutes = int(minutes)
-                if hours < 0 or hours > 23:
-                    return "Время подъема (часы) должно быть числом от 0 до 23."
-                if minutes < 0 or minutes > 59:
-                    return "Время подъема (минуты) должно быть числом от 0 до 59."
-                return None
+                age = int(age)
+                if age <= 0:
+                    errors['age'] = "Возраст должен быть положительным числом."
             except ValueError:
-                return "Время подъема должно быть числом."
+                errors['age'] = "Возраст должен быть числом."
 
-        error_monday = validate_wake_up_time(wake_up_time_monday_hours, wake_up_time_monday_minutes)
-        if error_monday:
-            errors['wake_up_time_monday'] = error_monday
-        error_tuesday = validate_wake_up_time(wake_up_time_tuesday_hours, wake_up_time_tuesday_minutes)
-        if error_tuesday:
-            errors['wake_up_time_tuesday'] = error_tuesday
-        error_wednesday = validate_wake_up_time(wake_up_time_wednesday_hours, wake_up_time_wednesday_minutes)
-        if error_wednesday:
-            errors['wake_up_time_wednesday'] = error_wednesday
-        error_thursday = validate_wake_up_time(wake_up_time_thursday_hours, wake_up_time_thursday_minutes)
-        if error_thursday:
-            errors['wake_up_time_thursday'] = error_thursday
-        error_friday = validate_wake_up_time(wake_up_time_friday_hours, wake_up_time_friday_minutes)
-        if error_friday:
-            errors['wake_up_time_friday'] = error_friday
-        error_saturday = validate_wake_up_time(wake_up_time_saturday_hours, wake_up_time_saturday_minutes)
-        if error_saturday:
-            errors['wake_up_time_saturday'] = error_saturday
-        error_sunday = validate_wake_up_time(wake_up_time_sunday_hours, wake_up_time_sunday_minutes)
-        if error_sunday:
-            errors['wake_up_time_sunday'] = error_sunday
+            try:
+                weight = float(weight)
+                if weight <= 0:
+                    errors['weight'] = "Вес должен быть положительным числом."
+            except ValueError:
+                errors['weight'] = "Вес должен быть числом."
 
-        # Если есть ошибки, возвращаем их в виде JSON
-        if errors:
-            return jsonify({'errors': errors})
+            def validate_wake_up_time(hours, minutes):
+                try:
+                    hours = int(hours)
+                    minutes = int(minutes)
+                    if hours < 0 or hours > 23:
+                        return "Время подъема (часы) должно быть числом от 0 до 23."
+                    if minutes < 0 or minutes > 59:
+                        return "Время подъема (минуты) должно быть числом от 0 до 59."
+                    return None
+                except ValueError:
+                    return "Время подъема должно быть числом."
 
-        # Если ошибок нет, сохраняем данные в базу данных
-        try:
-            age = int(age)
-            weight = float(weight)
-            wake_up_time_monday_hours = int(wake_up_time_monday_hours)
-            wake_up_time_monday_minutes = int(wake_up_time_monday_minutes)
-            wake_up_time_tuesday_hours = int(wake_up_time_tuesday_hours)
-            wake_up_time_tuesday_minutes = int(wake_up_time_tuesday_minutes)
-            wake_up_time_wednesday_hours = int(wake_up_time_wednesday_hours)
-            wake_up_time_wednesday_minutes = int(wake_up_time_wednesday_minutes)
-            wake_up_time_thursday_hours = int(wake_up_time_thursday_hours)
-            wake_up_time_thursday_minutes = int(wake_up_time_thursday_minutes)
-            wake_up_time_friday_hours = int(wake_up_time_friday_hours)
-            wake_up_time_friday_minutes = int(wake_up_time_friday_minutes)
-            wake_up_time_saturday_hours = int(wake_up_time_saturday_hours)
-            wake_up_time_saturday_minutes = int(wake_up_time_saturday_minutes)
-            wake_up_time_sunday_hours = int(wake_up_time_sunday_hours)
-            wake_up_time_sunday_minutes = int(wake_up_time_sunday_minutes)
+            error_monday = validate_wake_up_time(wake_up_time_monday_hours, wake_up_time_monday_minutes)
+            if error_monday:
+                errors['wake_up_time_monday'] = error_monday
+            error_tuesday = validate_wake_up_time(wake_up_time_tuesday_hours, wake_up_time_tuesday_minutes)
+            if error_tuesday:
+                errors['wake_up_time_tuesday'] = error_tuesday
+            error_wednesday = validate_wake_up_time(wake_up_time_wednesday_hours, wake_up_time_wednesday_minutes)
+            if error_wednesday:
+                errors['wake_up_time_wednesday'] = error_wednesday
+            error_thursday = validate_wake_up_time(wake_up_time_thursday_hours, wake_up_time_thursday_minutes)
+            if error_thursday:
+                errors['wake_up_time_thursday'] = error_thursday
+            error_friday = validate_wake_up_time(wake_up_time_friday_hours, wake_up_time_friday_minutes)
+            if error_friday:
+                errors['wake_up_time_friday'] = error_friday
+            error_saturday = validate_wake_up_time(wake_up_time_saturday_hours, wake_up_time_saturday_minutes)
+            if error_saturday:
+                errors['wake_up_time_saturday'] = error_saturday
+            error_sunday = validate_wake_up_time(wake_up_time_sunday_hours, wake_up_time_sunday_minutes)
+            if error_sunday:
+                errors['wake_up_time_sunday'] = error_sunday
+
+            # Если есть ошибки, возвращаем их в виде JSON
+            if errors:
+                return jsonify({'errors': errors})
+
+            # Если ошибок нет, сохраняем данные в базу данных
+            try:
+                age = int(age)
+                weight = float(weight)
+                wake_up_time_monday_hours = int(wake_up_time_monday_hours)
+                wake_up_time_monday_minutes = int(wake_up_time_monday_minutes)
+                wake_up_time_tuesday_hours = int(wake_up_time_tuesday_hours)
+                wake_up_time_tuesday_minutes = int(wake_up_time_tuesday_minutes)
+                wake_up_time_wednesday_hours = int(wake_up_time_wednesday_hours)
+                wake_up_time_wednesday_minutes = int(wake_up_time_wednesday_minutes)
+                wake_up_time_thursday_hours = int(wake_up_time_thursday_hours)
+                wake_up_time_thursday_minutes = int(wake_up_time_thursday_minutes)
+                wake_up_time_friday_hours = int(wake_up_time_friday_hours)
+                wake_up_time_friday_minutes = int(wake_up_time_friday_minutes)
+                wake_up_time_saturday_hours = int(wake_up_time_saturday_hours)
+                wake_up_time_saturday_minutes = int(wake_up_time_saturday_minutes)
+                wake_up_time_sunday_hours = int(wake_up_time_sunday_hours)
+                wake_up_time_sunday_minutes = int(wake_up_time_sunday_minutes)
+            except ValueError as e:
+                print(f"Ошибка преобразования типов: {e}")
+                errors['conversion'] = "Ошибка преобразования типов данных."
+                return jsonify({'errors': errors})
+
+            if profile:
+                profile.age = age
+                profile.weight = weight
+                profile.wake_up_time_monday_hours = wake_up_time_monday_hours
+                profile.wake_up_time_monday_minutes = wake_up_time_monday_minutes
+                profile.wake_up_time_tuesday_hours = wake_up_time_tuesday_hours
+                profile.wake_up_time_tuesday_minutes = wake_up_time_tuesday_minutes
+                profile.wake_up_time_wednesday_hours = wake_up_time_wednesday_hours
+                profile.wake_up_time_wednesday_minutes = wake_up_time_wednesday_minutes
+                profile.wake_up_time_thursday_hours = wake_up_time_thursday_hours
+                profile.wake_up_time_thursday_minutes = wake_up_time_thursday_minutes
+                profile.wake_up_time_friday_hours = wake_up_time_friday_hours
+                profile.wake_up_time_friday_minutes = wake_up_time_friday_minutes
+                profile.wake_up_time_saturday_hours = wake_up_time_saturday_hours
+                profile.wake_up_time_saturday_minutes = wake_up_time_saturday_minutes
+                profile.wake_up_time_sunday_hours = wake_up_time_sunday_hours
+                profile.wake_up_time_sunday_minutes = wake_up_time_sunday_minutes
+                
+            else:  # Создаем новый профиль
+                profile = UserProfile(
+                    age=age,
+                    weight=weight,
+                    wake_up_time_monday_hours=int(wake_up_time_monday_hours),  # Преобразуем в int
+                    wake_up_time_monday_minutes=int(wake_up_time_monday_minutes),  # Преобразуем в int
+                    wake_up_time_tuesday_hours=int(wake_up_time_tuesday_hours),  # Преобразуем в int
+                    wake_up_time_tuesday_minutes=int(wake_up_time_tuesday_minutes),  # Преобразуем в int
+                    wake_up_time_wednesday_hours=int(wake_up_time_wednesday_hours),  # Преобразуем в int
+                    wake_up_time_wednesday_minutes=int(wake_up_time_wednesday_minutes),  # Преобразуем в int
+                    wake_up_time_thursday_hours=int(wake_up_time_thursday_hours),  # Преобразуем в int
+                    wake_up_time_thursday_minutes=int(wake_up_time_thursday_minutes),  # Преобразуем в int
+                    wake_up_time_friday_hours=int(wake_up_time_friday_hours),  # Преобразуем в int
+                    wake_up_time_friday_minutes=int(wake_up_time_friday_minutes),  # Преобразуем в int
+                    wake_up_time_saturday_hours=int(wake_up_time_saturday_hours),  # Преобразуем в int
+                    wake_up_time_saturday_minutes=int(wake_up_time_saturday_minutes),  # Преобразуем в int
+                    wake_up_time_sunday_hours=int(wake_up_time_sunday_hours),  # Преобразуем в int
+                    wake_up_time_sunday_minutes=int(wake_up_time_sunday_minutes),  # Преобразуем в int
+                    user_id=current_user.id
+                )  # Связываем с пользователем
+                db.session.add(profile)
+
+
+            db.session.commit()
+
+            # Рассчитываем рекомендации
+            wake_up_time_hours, wake_up_time_minutes = get_wake_up_time_for_today(
+                profile)  # Получаем время пробуждения для текущего дня
+            recommendations_data = calculate_recommendations(age, weight, wake_up_time_hours, wake_up_time_minutes)
+
+            # Сохраняем рекомендации в базе данных
+            if profile.recommendations:
+                recommendations = profile.recommendations
+                recommendations.bedtime = recommendations_data['bedtime']
+            else:
+                recommendations = Recommendations(bedtime=recommendations_data['bedtime'], user_profile_id=profile.id)
+                db.session.add(recommendations)
+
+            db.session.commit()
+
+            # Возвращаем JSON с рекомендациями
+            return jsonify(recommendations_data)
         except ValueError as e:
-            print(f"Ошибка преобразования типов: {e}")
-            errors['conversion'] = "Ошибка преобразования типов данных."
-            return jsonify({'errors': errors})
-
-        if profile:
-            profile.age = age
-            profile.weight = weight
-            profile.wake_up_time_monday_hours = wake_up_time_monday_hours
-            profile.wake_up_time_monday_minutes = wake_up_time_monday_minutes
-            profile.wake_up_time_tuesday_hours = wake_up_time_tuesday_hours
-            profile.wake_up_time_tuesday_minutes = wake_up_time_tuesday_minutes
-            profile.wake_up_time_wednesday_hours = wake_up_time_wednesday_hours
-            profile.wake_up_time_wednesday_minutes = wake_up_time_wednesday_minutes
-            profile.wake_up_time_thursday_hours = wake_up_time_thursday_hours
-            profile.wake_up_time_thursday_minutes = wake_up_time_thursday_minutes
-            profile.wake_up_time_friday_hours = wake_up_time_friday_hours
-            profile.wake_up_time_friday_minutes = wake_up_time_friday_minutes
-            profile.wake_up_time_saturday_hours = wake_up_time_saturday_hours
-            profile.wake_up_time_saturday_minutes = wake_up_time_saturday_minutes
-            profile.wake_up_time_sunday_hours = wake_up_time_sunday_hours
-            profile.wake_up_time_sunday_minutes = wake_up_time_sunday_minutes
-            
-        else:  # Создаем новый профиль
-            profile = UserProfile(
-                age=age,
-                weight=weight,
-                wake_up_time_monday_hours=int(wake_up_time_monday_hours),  # Преобразуем в int
-                wake_up_time_monday_minutes=int(wake_up_time_monday_minutes),  # Преобразуем в int
-                wake_up_time_tuesday_hours=int(wake_up_time_tuesday_hours),  # Преобразуем в int
-                wake_up_time_tuesday_minutes=int(wake_up_time_tuesday_minutes),  # Преобразуем в int
-                wake_up_time_wednesday_hours=int(wake_up_time_wednesday_hours),  # Преобразуем в int
-                wake_up_time_wednesday_minutes=int(wake_up_time_wednesday_minutes),  # Преобразуем в int
-                wake_up_time_thursday_hours=int(wake_up_time_thursday_hours),  # Преобразуем в int
-                wake_up_time_thursday_minutes=int(wake_up_time_thursday_minutes),  # Преобразуем в int
-                wake_up_time_friday_hours=int(wake_up_time_friday_hours),  # Преобразуем в int
-                wake_up_time_friday_minutes=int(wake_up_time_friday_minutes),  # Преобразуем в int
-                wake_up_time_saturday_hours=int(wake_up_time_saturday_hours),  # Преобразуем в int
-                wake_up_time_saturday_minutes=int(wake_up_time_saturday_minutes),  # Преобразуем в int
-                wake_up_time_sunday_hours=int(wake_up_time_sunday_hours),  # Преобразуем в int
-                wake_up_time_sunday_minutes=int(wake_up_time_sunday_minutes),  # Преобразуем в int
-                user_id=current_user.id
-            )  # Связываем с пользователем
-            db.session.add(profile)
-
-
-        db.session.commit()
-
-        # Рассчитываем рекомендации
-        wake_up_time_hours, wake_up_time_minutes = get_wake_up_time_for_today(
-            profile)  # Получаем время пробуждения для текущего дня
-        recommendations_data = calculate_recommendations(age, weight, wake_up_time_hours, wake_up_time_minutes)
-
-        # Сохраняем рекомендации в базе данных
-        if profile.recommendations:
-            recommendations = profile.recommendations
-            recommendations.bedtime = recommendations_data['bedtime']
-        else:
-            recommendations = Recommendations(bedtime=recommendations_data['bedtime'], user_profile_id=profile.id)
-            db.session.add(recommendations)
-
-        db.session.commit()
-
-        # Возвращаем JSON с рекомендациями
-        return jsonify(recommendations_data)
-
+            db.session.rollback()
+            return jsonify({'errors': {'weight': 'Некорректный формат числа'}})
+        
     else:  # Если это GET запрос, отображаем форму с данными профиля
         if profile:
             return render_template('profile.html', profile=profile)
@@ -315,28 +320,36 @@ def logout():
 def index():
     profile = current_user.profile
     recommendations = None
+    bedtime_hours = None  # Инициализируем bedtime_hours
+    bedtime_minytes = None # Инициализируем bedtime_minytes
 
     if profile and profile.recommendations:
         recommendations = current_user.profile.recommendations
+        bedtime_hours = profile.recommendations.bedtime_hours  # Получаем часы из базы данных
+        bedtime_minytes = profile.recommendations.bedtime_minytes  # Получаем минуты из базы данных
     else:
         if profile: # Проверяем, что profile не None
-            wake_up_time_hours, wake_up_time_minutes = get_wake_up_time_for_today(
-                profile)  # Получаем время пробуждения для текущего дня
-            recommendations_data = calculate_recommendations(profile.age, profile.weight, wake_up_time_hours,
-                                                             wake_up_time_minutes)
+            wake_up_time_hours, wake_up_time_minutes = get_wake_up_time_for_today(profile) # Получаем время пробуждения для текущего дня
+            recommendations_data = calculate_recommendations(profile.age, profile.weight, wake_up_time_hours, wake_up_time_minutes)
+
             if profile:
-                bedtime_hours = Recommendations(bedtime_hours=recommendations_data['bedtime_hours'], user_profile_id=profile.id)
-                bedtime_minutes = Recommendations(bedtime_minutes=recommendations_data['bedtime_minutes'], user_profile_id=profile.id)
+                # Получаем часы и минуты из calculate_recommendations
+                bedtime_hours = recommendations_data['bedtime_hours']
+                bedtime_minytes = recommendations_data['bedtime_minytes']
+
+                recommendations = Recommendations(
+                    bedtime_hours=bedtime_hours,
+                    bedtime_minytes=bedtime_minytes,
+                    user_profile_id=profile.id
+                )
                 db.session.add(recommendations)
                 db.session.commit()
-            else:
-                recommendations_data = {"bedtime": 0}
-            recommendations = profile.recommendations
         else:
-            recommendations_data = {"bedtime": 0} # Значения по умолчанию
+            recommendations_data = {"bedtime_hours": 0, "bedtime_minytes": 0} # Значения по умолчанию
             recommendations = None
 
-    return render_template('index.html', bedtime_hours=bedtime_hours, bedtime_minutes=bedtime_minutes)
+    return render_template('index.html', bedtime_hours=bedtime_hours, bedtime_minytes=bedtime_minytes)
+
 
 if __name__ == "__main__":
     with app.app_context():
