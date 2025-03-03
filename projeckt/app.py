@@ -54,7 +54,8 @@ class UserProfile(db.Model):
 # Модель Recommendations
 class Recommendations(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    bedtime = db.Column(db.Integer)  # Время отхода ко сну
+    bedtime_hours = db.Column(db.Integer)  # Время отхода ко сну
+    bedtime_minytes = db.Column(db.Integer)  # Время отхода ко сну
     # TODO: Добавить другие рекомендации (время разминки, приема пищи и т.д.)
     user_profile_id = db.Column(db.Integer, db.ForeignKey('user_profile.id'), unique=True,
                                  nullable=False)  # Foreign Key
@@ -72,8 +73,9 @@ def calculate_recommendations(age, weight, wake_up_time_hours, wake_up_time_minu
     """
     # Простая логика: рекомендуем ложиться спать за 8 часов до времени пробуждения
     bedtime_hours = (wake_up_time_hours - 8) % 24
+    bedtime_minytes = wake_up_time_minutes
     # TODO: учесть минуты при расчете времени отхода ко сну
-    return {"bedtime": bedtime_hours}
+    return {"bedtime_hours": bedtime_hours, "bedtime_minytes": bedtime_minytes}
 
 
 def get_wake_up_time_for_today(profile):
@@ -323,7 +325,8 @@ def index():
             recommendations_data = calculate_recommendations(profile.age, profile.weight, wake_up_time_hours,
                                                              wake_up_time_minutes)
             if profile:
-                recommendations = Recommendations(bedtime=recommendations_data['bedtime'], user_profile_id=profile.id)
+                bedtime_hours = Recommendations(bedtime_hours=recommendations_data['bedtime_hours'], user_profile_id=profile.id)
+                bedtime_minutes = Recommendations(bedtime_minutes=recommendations_data['bedtime_minutes'], user_profile_id=profile.id)
                 db.session.add(recommendations)
                 db.session.commit()
             else:
@@ -333,7 +336,7 @@ def index():
             recommendations_data = {"bedtime": 0} # Значения по умолчанию
             recommendations = None
 
-    return render_template('index.html', recommendations=recommendations)
+    return render_template('index.html', bedtime_hours=bedtime_hours, bedtime_minutes=bedtime_minutes)
 
 if __name__ == "__main__":
     with app.app_context():
