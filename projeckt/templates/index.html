@@ -1,45 +1,16 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>День в фокусе</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-</head>
-<body>
-    <nav>
-        <ul>
-            <li><a href="{{ url_for('index') }}">Главная</a></li>
-            <li><a href="{{ url_for('profile') }}">Профиль</a></li>
-            <li><a href="{{ url_for('logout') }}">Выйти</a></li>
-        </ul>
-    </nav>
 
-    <div class="container">
-        {% if current_user.is_authenticated %}
-            <h1>Привет, {{ current_user.username }}!</h1>
+{% extends "layout.html" %}
 
-            <div id="recommendations">
-                {% if recommendations %}
-                    <h2>Ваши рекомендации на сегодня:</h2>
-                    <p>Рекомендуемое время отхода ко сну: <span id="bedtime">{{ recommendations.bedtime }}</span>:00</p>
-                    <!-- TODO: Добавить отображение других рекомендаций -->
-                {% else %}
-                    <p>Пожалуйста, заполните свой профиль, чтобы получить рекомендации.</p>
-                {% endif %}
-            </div>
+{% block title %}Главная страница{% endblock %}
 
+{% block content %}
+    <div class="container index-page"></div>
+        <h2>Рекомендации</h2>
+        {% if recommendations %}
+            <p>Рекомендуемое время отхода ко сну: <span id="bedtime">{{ "%02d:%02d"|format(recommendations.bedtime_hours, recommendations.bedtime_minutes) }}</span></p>
         {% else %}
-            <p>Вы не вошли в систему. <a href="{{ url_for('login') }}">Войти</a> или <a href="{{ url_for('register') }}">Зарегистрироваться</a></p>
+            <p>Пожалуйста, заполните свой профиль, чтобы получить рекомендации.</p>
         {% endif %}
     </div>
+{% endblock %}
 
-    <script>
-        function updateRecommendations(bedtime) {
-            document.getElementById("bedtime").textContent = bedtime;
-        }
-    </script>
-
-    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
-</body>
-</html>
