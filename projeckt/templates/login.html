@@ -7,12 +7,17 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-    <h2>Вход</h2>
-    <form method="post" action="{{ url_for('login') }}">
-        <input type="text" name="username" placeholder="Имя пользователя" required><br><br>
-        <input type="password" name="password" placeholder="Пароль" required><br><br>
-        <button type="submit">Войти</button>
-    </form>
-    <p>Еще нет аккаунта? <a href="{{ url_for('register') }}">Зарегистрироваться</a></p>
+    <div class="header">
+        <h1>День в фокусе</h1>
+    </div>
+    <div class="container reg-page">
+        <h2>Вход</h2>
+        <form method="post" action="{{ url_for('login') }}">
+            <input type="text" name="username" placeholder="Имя пользователя" required><br><br>
+            <input type="password" name="password" placeholder="Пароль" required><br><br>
+            <button type="submit">Войти</button>
+        </form>
+        <p style="text-align:center">Еще нет аккаунта? <a href="{{ url_for('register') }}">Зарегистрироваться</a></p>
+    </div>    
 </body>
 </html>
