@@ -7,7 +7,8 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-    <div class="header">
+    <div class="snowblock"></div>
+    <div class="{{color}}-header">
         <h1>День в фокусе</h1>
     </div>
 
@@ -30,9 +31,9 @@
                 </a>
             </li>
             <li>
-                <a href="{{ url_for('logout') }}">
-                    <img src="{{ url_for('static', filename='img/logout.png') }}" alt="Выйти" width="32" height="32">
-                    Выйти
+                <a href="{{ url_for('settings') }}">
+                    <img src="{{ url_for('static', filename='img/logout.png') }}" alt="Настройки" width="32" height="32">
+                    Настройки
                 </a>
             </li>
         </ul>
