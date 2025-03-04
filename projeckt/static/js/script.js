@@ -140,3 +140,27 @@ document.addEventListener('DOMContentLoaded', function() {
             });
     });
 });
+
+document.addEventListener('DOMContentLoaded', function() {
+    const loginForm = document.getElementById('login-form');
+    const loginError = document.getElementById('login-error');
+
+    loginForm.addEventListener('submit', function(event) {
+        event.preventDefault(); // Предотвращаем отправку формы по умолчанию
+
+        const formData = new FormData(loginForm); // Создаем объект FormData
+
+        fetch('/login', { // Отправляем AJAX запрос на сервер
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json()) // Преобразуем ответ в JSON
+        .then(data => {
+            if (data.success) { // Если вход успешен
+                window.location.href = '/'; // Перенаправляем на главную страницу
+            } else { // Если вход не успешен
+                loginError.textContent = data.message; // Выводим сообщение об ошибке
+            }
+        });
+    });
+});
