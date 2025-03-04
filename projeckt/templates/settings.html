@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+
+{% block title %}Настройки{% endblock %}
+
+{% block content %}
+    <div class="container index-page">
+        <h2>Настройки</h2>
+        <p class="{{color}}-text">Какую тему для сайта вы хотите выбрать?</p>
+        <form method="post" action="/settings">
+            <input type="hidden" name="color" value="green">
+            <button type="submit">Нажми меня</button>
+        </form>
+        <form method="post" action="/settings">
+            <input type="hidden" name="color" value="pink">
+            <button type="submit">Нажми меня</button>
+        </form>
+        <form method="post" action="/settings">
+            <input type="hidden" name="color" value="black">
+            <button type="submit">Нажми меня</button>
+        </form>
+        <a class="exit" href="{{ url_for('logout') }}">Выйти из аккаунта?</a>
+    </div>
+{% endblock %}
