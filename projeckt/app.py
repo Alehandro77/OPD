@@ -14,6 +14,7 @@ migrate = Migrate(app, db)  # Инициализация Flask-Migrate
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'  # Указываем имя функции для входа!
+login_manager.login_message = None  # Отключаем сообщение по умолчанию
 
 
 # Модель User
@@ -21,6 +22,7 @@ class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(20), unique=True, nullable=False)
     password = db.Column(db.String(80), nullable=False)
+    color = db.Column(db.String(20), nullable=False, default='green')
     profile = db.relationship('UserProfile', backref='user', uselist=False)  # Связь с UserProfile (один к одному)
 
     def __repr__(self):
@@ -54,9 +56,19 @@ class UserProfile(db.Model):
 # Модель Recommendations
 class Recommendations(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    bedtime_hours = db.Column(db.Integer)  # Время отхода ко сну
-    bedtime_minytes = db.Column(db.Integer)  # Время отхода ко сну
-    # TODO: Добавить другие рекомендации (время разминки, приема пищи и т.д.)
+    bedtime_hours = db.Column(db.Integer)  # Время отхода ко сну часы
+    bedtime_minytes = db.Column(db.Integer)  # Время отхода ко сну минуты
+    not_hours = db.Column(db.Integer)  # Время без нагрузок в часах
+    not_minytes = db.Column(db.Integer)  # Время без нагрузок в минутах
+    breakfast_hours = db.Column(db.Integer)  # Начала завтрака в часах
+    breakfast_minutes = db.Column(db.Integer)  # Начала завтрака в минутах
+    breakfast_hours_up = db.Column(db.Integer)  # Конец завтрака в часах
+    breakfast_minutes_up = db.Column(db.Integer)  # Конец завтрака в минутах
+    lanch_hours = db.Column(db.Integer)  # Время начала обеда в часах 
+    lanch_minutes = db.Column(db.Integer)  # Время обеда в минутах
+    lanch_hours_up = db.Column(db.Integer)  # Время конца обеда в часах 
+    diner = db.Column(db.Integer)  # Начало ужана
+    diner_up = db.Column(db.Integer)  # Конец ужина
     user_profile_id = db.Column(db.Integer, db.ForeignKey('user_profile.id'), unique=True,
                                  nullable=False)  # Foreign Key
 
@@ -65,19 +77,46 @@ class Recommendations(db.Model):
 def load_user(user_id):
     return User.query.get(int(user_id))
 
-def calculate_recommendations(age, weight, wake_up_time_hours, wake_up_time_minutes):
+def calculate_recommendations(age, weight, wake_up_time_hours, wake_up_time_minutes, wake_up_time_hours_2, wake_up_time_minutes_2):
     """
     Функция для расчета рекомендаций на основе данных пользователя.
-    TODO: Реализовать более сложную логику.
     """
-    # Простая логика: рекомендуем ложиться спать за 8 часов до времени пробуждения
+    # Лечь спать за 8 часолв до пробуждения
     bedtime_hours = (wake_up_time_hours - 8) % 24
-    bedtime_minytes = wake_up_time_minutes
-    # TODO: учесть минуты при расчете времени отхода ко сну
-    return {"bedtime_hours": bedtime_hours, "bedtime_minytes": bedtime_minytes}
+    bedtime_minytes = wake_up_time_minutes // 10 * 10
 
+    # Убрать телефон и убрать стресс
+    not_hours = (bedtime_hours - 1) % 24
+    not_minytes = bedtime_minytes // 10 * 10
 
-def get_wake_up_time_for_today(profile):
+    # Ужин
+    diner = (bedtime_hours - 3) % 24
+    diner_up = (bedtime_hours - 2) % 24
+
+    #Завтрак
+    breakfast_minutes = (wake_up_time_minutes_2 + 30) % 60 // 10 * 10
+    breakfast_minutes_dop = (wake_up_time_minutes_2 + 30) // 60
+    breakfast_hours = wake_up_time_hours_2 + breakfast_minutes_dop
+    breakfast_minutes_up = (breakfast_minutes + 20) % 60
+    breakfast_minutes_dop_up = (breakfast_minutes + 20) // 60
+    breakfast_hours_up = breakfast_hours + breakfast_minutes_dop_up
+
+    # Обед
+    lanch_time_d = (diner - 6) % 24
+    lanch_time_b = (breakfast_hours_up + 6) % 24
+    lanch_sr = (lanch_time_d + lanch_time_b) // 2
+    lanch_hours = lanch_sr
+    lanch_minutes = 0
+    lanch_hours_up = lanch_sr + 1
+
+    return {"bedtime_hours": bedtime_hours, "bedtime_minytes": bedtime_minytes, 
+            "not_hours": not_hours, "not_minytes": not_minytes,
+            "diner": diner, "diner_up": diner_up,
+            "breakfast_minutes": breakfast_minutes, "breakfast_hours": breakfast_hours, 
+            "breakfast_minutes_up": breakfast_minutes_up, "breakfast_hours_up": breakfast_hours_up,
+            "lanch_hours": lanch_hours, "lanch_hours_up": lanch_hours_up, "lanch_minutes": lanch_minutes}
+
+def get_wake_up_time_for_tomorrow(profile):
     """
     Определяет завтрашний день недели и возвращает время пробуждения для этого дня.
     """
@@ -103,10 +142,36 @@ def get_wake_up_time_for_today(profile):
         return profile.wake_up_time_sunday_hours, profile.wake_up_time_sunday_minutes
 
 
+def get_wake_up_time_for_today(profile):
+    """
+    Определяет сегодняшний день недели и возвращает время пробуждения для этого дня.
+    """
+    if not profile:
+        return 0, 0  # Возвращаем значения по умолчанию, если профиль не существует
+
+    today = datetime.datetime.now().weekday()  # 0 - понедельник, 6 - воскресенье
+
+    if today == 0:
+        return profile.wake_up_time_monday_hours, profile.wake_up_time_monday_minutes
+    elif today == 1:
+        return profile.wake_up_time_tuesday_hours, profile.wake_up_time_tuesday_minutes
+    elif today == 2:
+        return profile.wake_up_time_wednesday_hours, profile.wake_up_time_wednesday_minutes
+    elif today == 3:
+        return profile.wake_up_time_thursday_hours, profile.wake_up_time_thursday_minutes
+    elif today == 4:
+        return profile.wake_up_time_friday_hours, profile.wake_up_time_friday_minutes
+    elif today == 5:
+        return profile.wake_up_time_saturday_hours, profile.wake_up_time_saturday_minutes
+    else:
+        return profile.wake_up_time_sunday_hours, profile.wake_up_time_sunday_minutes
+
 # Маршрут для профиля пользователя
 @app.route('/profile', methods=['GET', 'POST'])
 @login_required
 def profile():
+    user = User.query.get(current_user.id)
+    color = user.color
     profile = current_user.profile  # Получаем профиль пользователя
     errors = {}  # Создаем словарь для хранения ошибок
 
@@ -250,19 +315,46 @@ def profile():
             db.session.commit()
 
             # Рассчитываем рекомендации
-            wake_up_time_hours, wake_up_time_minutes = get_wake_up_time_for_today(
+            wake_up_time_hours, wake_up_time_minutes = get_wake_up_time_for_tomorrow(
                 profile)  # Получаем время пробуждения для текущего дня
-            recommendations_data = calculate_recommendations(age, weight, wake_up_time_hours, wake_up_time_minutes)
+            wake_up_time_hours_2, wake_up_time_minutes_2 = get_wake_up_time_for_today(
+                profile)  # Получаем время пробуждения для текущего дня
+            recommendations_data = calculate_recommendations(age, weight, wake_up_time_hours, wake_up_time_minutes, wake_up_time_hours_2, wake_up_time_minutes_2)
 
             # Сохраняем рекомендации в базе данных
             if profile.recommendations:
                 recommendations = profile.recommendations
                 recommendations.bedtime_hours = recommendations_data['bedtime_hours']
                 recommendations.bedtime_minytes = recommendations_data['bedtime_minytes']
+                recommendations.not_hours = recommendations_data['not_hours']
+                recommendations.not_minytes = recommendations_data['not_minytes']
+                recommendations.breakfast_hours = recommendations_data['breakfast_hours']
+                recommendations.breakfast_minutes = recommendations_data['breakfast_minutes']
+                recommendations.breakfast_hours_up = recommendations_data['breakfast_hours_up']
+                recommendations.breakfast_minutes_up = recommendations_data['breakfast_minutes_up']
+                recommendations.lanch_hours = recommendations_data['lanch_hours']
+                recommendations.lanch_minutes = recommendations_data['lanch_minutes']
+                recommendations.lanch_hours_up = recommendations_data['lanch_hours_up']
+                recommendations.diner = recommendations_data['diner']
+                recommendations.diner_up = recommendations_data['diner_up']
             else:
-                recommendation_hours = Recommendations(bedtime_hours=recommendations_data['bedtime_hours'], user_profile_id=profile.id)
-                recommendation_minytes = Recommendations(bedtime_minytes=recommendations_data['bedtime_minytes'], user_profile_id=profile.id)
-                db.session.add(recommendation_hours, recommendation_minytes)
+                recommendation_bedtime_hours = Recommendations(bedtime_hours=recommendations_data['bedtime_hours'], user_profile_id=profile.id)
+                recommendation_bedtime_minytes = Recommendations(bedtime_minytes=recommendations_data['bedtime_minytes'], user_profile_id=profile.id)
+                recommendation_not_hours = Recommendations(not_hours=recommendations_data['not_hours'], user_profile_id=profile.id)
+                recommendation_not_minytes = Recommendations(not_minytes=recommendations_data['not_minytes'], user_profile_id=profile.id)
+                recommendation_breakfast_hours = Recommendations(breakfast_hours=recommendations_data['breakfast_hours'], user_profile_id=profile.id)
+                recommendation_breakfast_minutes = Recommendations(breakfast_minutes=recommendations_data['breakfast_minutes'], user_profile_id=profile.id)
+                recommendation_breakfast_hours_up = Recommendations(breakfast_hours_up=recommendations_data['breakfast_hours_up'], user_profile_id=profile.id)
+                recommendation_breakfast_minutes_up = Recommendations(breakfast_minutes_up=recommendations_data['breakfast_minutes_up'], user_profile_id=profile.id)
+                recommendation_lanch_hours = Recommendations(lanch_hours=recommendations_data['lanch_hours'], user_profile_id=profile.id)
+                recommendation_lanch_minutes = Recommendations(lanch_minutes=recommendations_data['lanch_minutes'], user_profile_id=profile.id)
+                recommendation_lanch_hours_up = Recommendations(lanch_hours_up=recommendations_data['lanch_hours_up'], user_profile_id=profile.id)
+                recommendation_diner = Recommendations(diner=recommendations_data['diner'], user_profile_id=profile.id)
+                recommendation_diner_up = Recommendations(diner_up=recommendations_data['diner_up'], user_profile_id=profile.id)
+                db.session.add(recommendation_bedtime_hours, recommendation_bedtime_minytes, recommendation_not_hours, 
+                               recommendation_not_minytes, recommendation_diner,recommendation_diner_up, recommendation_breakfast_hours, recommendation_breakfast_minutes,
+                               recommendation_breakfast_hours_up, recommendation_breakfast_minutes_up, recommendation_lanch_hours, 
+                               recommendation_lanch_minutes, recommendation_lanch_hours_up)
 
             db.session.commit()
 
@@ -275,9 +367,24 @@ def profile():
         
     else:  # Если это GET запрос, отображаем форму с данными профиля
         if profile:
-            return render_template('profile.html', profile=profile)
+            return render_template('profile.html', profile=profile, color=color)
         else:
-            return render_template('profile.html')
+            return render_template('profile.html', color=color)
+
+@app.route('/settings', methods=['GET', 'POST'])
+@login_required
+def settings():
+    user = User.query.get(current_user.id)
+    color = user.color
+    if request.method == 'POST':
+        color = request.form.get('color')
+        user.color = color
+        db.session.commit()
+        return render_template("settings.html", color=color)
+    else:
+        return render_template("settings.html", color=color)
+
+
 
 @app.route('/check_username')
 def check_username():
@@ -320,7 +427,9 @@ def login():
         if user and check_password_hash(user.password, password):
             login_user(user)
             return redirect(url_for('index'))
-        return 'Неверные имя пользователя или пароль'  # TODO: Вывести сообщение об ошибке на страницу
+        else:
+            flash('Неверный логин или пароль', 'error') # Используем flash
+            return redirect(url_for('login'))
     return render_template('login.html')
 
 
@@ -336,37 +445,86 @@ def logout():
 @app.route('/')
 @login_required
 def index():
+    user = User.query.get(current_user.id)
+    color = user.color
     profile = current_user.profile
     recommendations = None
     bedtime_hours = None  # Инициализируем bedtime_hours
     bedtime_minytes = None # Инициализируем bedtime_minytes
+    not_hours = None  # Инициализируем not_hours
+    not_minytes = None # Инициализируем not_minytes
+    breakfast_hours = None
+    breakfast_minutes = None  # Инициализируем bedtime_hours
+    breakfast_hours_up = None # Инициализируем bedtime_minytes
+    breakfast_minutes_up = None  # Инициализируем not_hours
+    lanch_hours = None # Инициализируем not_minytes
+    lanch_minutes = None
+    lanch_hours_up = None  # Инициализируем bedtime_hour
+    diner = None # Инициализируем bedtime_minytes
+    diner_up = None  # Инициализируем not_hours
 
     if profile and profile.recommendations:
         recommendations = current_user.profile.recommendations
         bedtime_hours = profile.recommendations.bedtime_hours  # Получаем часы из базы данных
         bedtime_minytes = profile.recommendations.bedtime_minytes  # Получаем минуты из базы данных
+        not_hours = profile.recommendations.not_hours  # Получаем часы из базы данных
+        not_minytes = profile.recommendations.not_minytes  # Получаем минуты из базы данных
+        breakfast_hours = profile.recommendations.breakfast_hours  # Получаем минуты из базы данных
+        breakfast_minutes = profile.recommendations.breakfast_minutes  # Получаем минуты из базы данных
+        breakfast_hours_up = profile.recommendations.breakfast_hours_up  # Получаем минуты из базы данных
+        breakfast_minutes_up = profile.recommendations.breakfast_minutes_up  # Получаем минуты из базы данных
+        lanch_hours = profile.recommendations.lanch_hours  # Получаем минуты из базы данных
+        lanch_minutes = profile.recommendations.lanch_minutes  # Получаем минуты из базы данных
+        lanch_hours_up = profile.recommendations.lanch_hours_up  # Получаем минуты из базы данных
+        diner = profile.recommendations.diner  # Получаем минуты из базы данных
+        diner_up = profile.recommendations.diner_up  # Получаем минуты из базы данных
     else:
         if profile: # Проверяем, что profile не None
-            wake_up_time_hours, wake_up_time_minutes = get_wake_up_time_for_today(profile) # Получаем время пробуждения для текущего дня
-            recommendations_data = calculate_recommendations(profile.age, profile.weight, wake_up_time_hours, wake_up_time_minutes)
+            wake_up_time_hours, wake_up_time_minutes = get_wake_up_time_for_tomorrow(profile) # Получаем время пробуждения для текущего дня
+            wake_up_time_hours_2, wake_up_time_minutes_2 = get_wake_up_time_for_today(profile)  # Получаем время пробуждения для текущего дня
+            recommendations_data = calculate_recommendations(profile.age, profile.weight, wake_up_time_hours, wake_up_time_minutes, wake_up_time_hours_2, wake_up_time_minutes_2)
 
             if profile:
                 # Получаем часы и минуты из calculate_recommendations
                 bedtime_hours = recommendations_data['bedtime_hours']
                 bedtime_minytes = recommendations_data['bedtime_minytes']
-
+                not_hours = recommendations_data['not_hours']
+                not_minytes = recommendations_data['not_minytes']
+                breakfast_hours = recommendations_data['breakfast_hours']
+                breakfast_minutes = recommendations_data['breakfast_minutes']
+                breakfast_hours_up = recommendations_data['breakfast_hours_up']
+                breakfast_minutes_up = recommendations_data['breakfast_minutes_up']
+                lanch_hours = recommendations_data['lanch_hours']
+                lanch_minutes = recommendations_data['lanch_minutes']
+                lanch_hours_up = recommendations_data['lanch_hours_up']
+                diner = recommendations_data['diner']
+                diner_up = recommendations_data['diner_up']
+                
                 recommendations = Recommendations(
                     bedtime_hours=bedtime_hours,
                     bedtime_minytes=bedtime_minytes,
+                    not_hours=not_hours,
+                    not_minytes=not_minytes,
+                    breakfast_hours=breakfast_hours,
+                    breakfast_minutes=breakfast_minutes,
+                    breakfast_hours_up=breakfast_hours_up,
+                    breakfast_minutes_up=breakfast_minutes_up,
+                    lanch_hours=lanch_hours,
+                    lanch_minutes=lanch_minutes,
+                    lanch_hours_up=lanch_hours_up,
+                    diner=diner,
+                    diner_up=diner_up,
                     user_profile_id=profile.id
                 )
                 db.session.add(recommendations)
                 db.session.commit()
         else:
-            recommendations_data = {"bedtime_hours": 0, "bedtime_minytes": 0} # Значения по умолчанию
+            recommendations_data = {"bedtime_hours": 0, "bedtime_minytes": 0, "not_hours": 0, "not_minytes": 0} # Значения по умолчанию
             recommendations = None
 
-    return render_template('index.html', bedtime_hours=bedtime_hours, bedtime_minytes=bedtime_minytes)
+    return render_template('index.html', bedtime_hours=bedtime_hours, bedtime_minytes=bedtime_minytes, not_hours=not_hours, not_minytes=not_minytes,
+                           breakfast_hours=breakfast_hours, breakfast_minutes=breakfast_minutes, breakfast_hours_up=breakfast_hours_up, breakfast_minutes_up=breakfast_minutes_up,
+                           lanch_hours=lanch_hours, lanch_minutes=lanch_minutes, lanch_hours_up=lanch_hours_up, diner=diner, diner_up=diner_up, color=color)
 
 
 if __name__ == "__main__":
