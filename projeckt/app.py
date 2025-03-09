@@ -34,6 +34,8 @@ class UserProfile(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     age = db.Column(db.Integer)
     weight = db.Column(db.Float)  # Вес может быть дробным числом
+    gender = db.Column(db.String(5), nullable=False)
+    height = db.Column(db.Integer)
     wake_up_time_monday_hours = db.Column(db.Integer)  # Время пробуждения в понедельник
     wake_up_time_monday_minutes = db.Column(db.Integer)
     wake_up_time_tuesday_hours = db.Column(db.Integer)
@@ -77,13 +79,44 @@ class Recommendations(db.Model):
 def load_user(user_id):
     return User.query.get(int(user_id))
 
-def calculate_recommendations(age, weight, wake_up_time_hours, wake_up_time_minutes, wake_up_time_hours_2, wake_up_time_minutes_2):
+def calculate_recommendations(age, weight, gender, height, wake_up_time_hours, wake_up_time_minutes, wake_up_time_hours_2, wake_up_time_minutes_2):
     """
     Функция для расчета рекомендаций на основе данных пользователя.
     """
-    # Лечь спать за 8 часолв до пробуждения
-    bedtime_hours = (wake_up_time_hours - 8) % 24
-    bedtime_minytes = wake_up_time_minutes // 10 * 10
+    base_time_m = 0
+    
+    if age >= 0 and age <= 1:
+        base_time_h = 13
+    elif age >= 2 and age <= 5:
+        base_time_h = 12
+    elif age >= 6 and age <= 13:
+        base_time_h = 10
+    elif age >= 14 and age <= 17:
+        base_time_h = 9
+    elif age >= 18 and age <= 64:
+        base_time_h = 8
+    elif age > 64:
+        base_time_h = 7
+        base_time_m = 30
+
+    imt = weight/((height/100)*(height/100))
+
+    if imt < 18.5:
+        imt_kor_m = -15
+    elif imt >= 25 and age <= 30:
+        imt_kor_m = 15
+    elif imt > 30:
+        imt_kor_m = 30
+    else:
+        imt_kor_m = 0
+    if gender == "men":
+        k_gender_m = 0
+    elif gender == "women":
+        k_gender_m = 15
+
+    bedtime_minytes = (wake_up_time_minutes - (base_time_m + imt_kor_m + k_gender_m)) % 60
+    k_bedtime_minytes = (wake_up_time_minutes - (base_time_m + imt_kor_m + k_gender_m)) // 60
+    bedtime_hours = (wake_up_time_hours - base_time_h + k_bedtime_minytes)  % 24
 
     # Убрать телефон и убрать стресс
     not_hours = (bedtime_hours - 1) % 24
@@ -179,7 +212,8 @@ def profile():
         try:
             age = int(request.form['age'])
             weight = float(request.form['weight'])
-
+            height = int(request.form['height'])
+            gender = (request.form['gender'])
             wake_up_time_monday_hours = int(request.form['wake_up_time_monday_hours'])
             wake_up_time_monday_minutes = int(request.form['wake_up_time_monday_minutes'])
             wake_up_time_tuesday_hours = int(request.form['wake_up_time_tuesday_hours'])
@@ -210,39 +244,6 @@ def profile():
             except ValueError:
                 errors['weight'] = "Вес должен быть числом."
 
-            def validate_wake_up_time(hours, minutes):
-                try:
-                    hours = int(hours)
-                    minutes = int(minutes)
-                    if hours < 0 or hours > 23:
-                        return "Время подъема (часы) должно быть числом от 0 до 23."
-                    if minutes < 0 or minutes > 59:
-                        return "Время подъема (минуты) должно быть числом от 0 до 59."
-                    return None
-                except ValueError:
-                    return "Время подъема должно быть числом."
-
-            error_monday = validate_wake_up_time(wake_up_time_monday_hours, wake_up_time_monday_minutes)
-            if error_monday:
-                errors['wake_up_time_monday'] = error_monday
-            error_tuesday = validate_wake_up_time(wake_up_time_tuesday_hours, wake_up_time_tuesday_minutes)
-            if error_tuesday:
-                errors['wake_up_time_tuesday'] = error_tuesday
-            error_wednesday = validate_wake_up_time(wake_up_time_wednesday_hours, wake_up_time_wednesday_minutes)
-            if error_wednesday:
-                errors['wake_up_time_wednesday'] = error_wednesday
-            error_thursday = validate_wake_up_time(wake_up_time_thursday_hours, wake_up_time_thursday_minutes)
-            if error_thursday:
-                errors['wake_up_time_thursday'] = error_thursday
-            error_friday = validate_wake_up_time(wake_up_time_friday_hours, wake_up_time_friday_minutes)
-            if error_friday:
-                errors['wake_up_time_friday'] = error_friday
-            error_saturday = validate_wake_up_time(wake_up_time_saturday_hours, wake_up_time_saturday_minutes)
-            if error_saturday:
-                errors['wake_up_time_saturday'] = error_saturday
-            error_sunday = validate_wake_up_time(wake_up_time_sunday_hours, wake_up_time_sunday_minutes)
-            if error_sunday:
-                errors['wake_up_time_sunday'] = error_sunday
 
             # Если есть ошибки, возвращаем их в виде JSON
             if errors:
@@ -252,6 +253,8 @@ def profile():
             try:
                 age = int(age)
                 weight = float(weight)
+                height = int(height)
+                gender = (gender)
                 wake_up_time_monday_hours = int(wake_up_time_monday_hours)
                 wake_up_time_monday_minutes = int(wake_up_time_monday_minutes)
                 wake_up_time_tuesday_hours = int(wake_up_time_tuesday_hours)
@@ -274,6 +277,8 @@ def profile():
             if profile:
                 profile.age = age
                 profile.weight = weight
+                profile.aheightge = height
+                profile.gender = gender
                 profile.wake_up_time_monday_hours = wake_up_time_monday_hours
                 profile.wake_up_time_monday_minutes = wake_up_time_monday_minutes
                 profile.wake_up_time_tuesday_hours = wake_up_time_tuesday_hours
@@ -293,6 +298,8 @@ def profile():
                 profile = UserProfile(
                     age=age,
                     weight=weight,
+                    height=height,
+                    gender=gender,
                     wake_up_time_monday_hours=int(wake_up_time_monday_hours),  # Преобразуем в int
                     wake_up_time_monday_minutes=int(wake_up_time_monday_minutes),  # Преобразуем в int
                     wake_up_time_tuesday_hours=int(wake_up_time_tuesday_hours),  # Преобразуем в int
@@ -319,7 +326,7 @@ def profile():
                 profile)  # Получаем время пробуждения для текущего дня
             wake_up_time_hours_2, wake_up_time_minutes_2 = get_wake_up_time_for_today(
                 profile)  # Получаем время пробуждения для текущего дня
-            recommendations_data = calculate_recommendations(age, weight, wake_up_time_hours, wake_up_time_minutes, wake_up_time_hours_2, wake_up_time_minutes_2)
+            recommendations_data = calculate_recommendations(age, weight, gender, height, wake_up_time_hours, wake_up_time_minutes, wake_up_time_hours_2, wake_up_time_minutes_2)
 
             # Сохраняем рекомендации в базе данных
             if profile.recommendations:
@@ -482,7 +489,7 @@ def index():
         if profile: # Проверяем, что profile не None
             wake_up_time_hours, wake_up_time_minutes = get_wake_up_time_for_tomorrow(profile) # Получаем время пробуждения для текущего дня
             wake_up_time_hours_2, wake_up_time_minutes_2 = get_wake_up_time_for_today(profile)  # Получаем время пробуждения для текущего дня
-            recommendations_data = calculate_recommendations(profile.age, profile.weight, wake_up_time_hours, wake_up_time_minutes, wake_up_time_hours_2, wake_up_time_minutes_2)
+            recommendations_data = calculate_recommendations(profile.age, profile.weight, profile.gender, profile.height, wake_up_time_hours, wake_up_time_minutes, wake_up_time_hours_2, wake_up_time_minutes_2)
 
             if profile:
                 # Получаем часы и минуты из calculate_recommendations
