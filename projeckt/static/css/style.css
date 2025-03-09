@@ -23,64 +23,149 @@
 
 body {
     font-family: Arial, sans-serif;
+    font-weight: bold;
     margin: 0;
     padding: 0;
-    background-color: #f5f5dc; /* Бежевый фон */
     color: #333; /* Темно-серый текст */
 }
 
-.container {
+.green-fon {
+    background-image: url('../img/fon_olive.jpg');
+    margin: 0;
+    padding: 0;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed; /* Или scroll, если хотите, чтобы фон прокручивался */
+    height: 100vh; /* Устанавливает высоту на 100% высоты окна */
+}
+
+.black-fon {
+    background-image: url('../img/fon_spase2.jpg');
+    margin: 0;
+    padding: 0;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed; /* Или scroll, если хотите, чтобы фон прокручивался */
+    height: 100vh; /* Устанавливает высоту на 100% высоты окна */
+}
+
+.pink-fon {
+    background-image: url('../img/fon_sakyra.jpg');
+    margin: 0;
+    padding: 0;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed; /* Или scroll, если хотите, чтобы фон прокручивался */
+    height: 100vh; /* Устанавливает высоту на 100% высоты окна */
+}
+
+.green-container {
     max-width: 800px;
     margin: 0 auto;
     padding: 20px;
-    background-color: #fff; /* Белый фон для контента */
+    background-color: rgba(31,	110,	125, 0); /* Белый фон для контента */
     border-radius: 5px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Легкая тень */
 }
 
-.index-page {
+.black-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: rgba(31,	110,	125, 0); /* Белый фон для контента */
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Легкая тень */
+}
+
+.pink-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: rgba(31,	110,	125, 0); /* Белый фон для контента */
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Легкая тень */
+}
+
+.green-index-page {
     padding-top: 70px; /* Отступ сверху для главной страницы */
-
+    background-color: rgba(	217,	234,	211, 0.8);
 }
 
-.profile-page {
-    padding-top: 60px; /* Отступ сверху для страницы профиля */
+.pink-index-page {
+    padding-top: 70px; /* Отступ сверху для главной страницы */
+    background-color: rgba(244,	194,	194, 0.8);
+}
+
+.black-index-page {
+    padding-top: 70px; /* Отступ сверху для главной страницы */
+    background-color: rgba(156, 77, 103, 0.8);
+}
+
+.black-settings-page {
+    padding-top: 30px; /* Отступ сверху для главной страницы */
+    background-color: rgba(156, 77, 103, 0.8);
+}
+
+.pink-settings-page {
+    padding-top: 30px; /* Отступ сверху для главной страницы */
+    background-color: rgba(244,	194,	194, 0.8);
+}
+
+.green-settings-page {
+    padding-top: 30px; /* Отступ сверху для главной страницы */
+    background-color: rgba(	217,	234,	211, 0.8);
+}
+
+.black-profile-page {
+    padding-top: 40px; /* Отступ сверху для страницы профиля */
     padding-bottom: 75px; /* Отступ снизу для страницы профиля */
+    background-color: rgba(156, 77, 103, 0.8);
 }
 
-.reg-page {
-    padding-top: 70px; /* Отступ сверху для страницы профиля */
+.pink-profile-page {
+    padding-top: 40px; /* Отступ сверху для страницы профиля */
+    padding-bottom: 75px; /* Отступ снизу для страницы профиля */
+    background-color: rgba(244,	194,	194, 0.8);
 }
-  
+
+.green-profile-page {
+    padding-top: 40px; /* Отступ сверху для страницы профиля */
+    padding-bottom: 75px; /* Отступ снизу для страницы профиля */
+    background-color: rgba(	217,	234,	211, 0.8);
+}
+
+.reg-page{
+    background-color: rgba(	217,	234,	211, 0.8);
+    padding-top: 30px; /* Отступ сверху для страницы профиля */
+}
+
 .exit {
     border: 1px solid red; /* Параметры рамки */
-    padding: 1px 4px; /* Пространство от рамки до текста по горизонтали и вертикали */
+    display: flex;
+    margin-top: 75px;
+    padding: 10px 10px; /* Пространство от рамки до текста по горизонтали и вертикали */
     border-radius: 4px; /* Радиус скругления углов */
     background-color: pink;
     color: red;
+    text-align: center;
 }
 
-.green-text {
-    color: green;
-}
-
-.black-text {
-    color: black;
-}
-
-.pink-text {
-    color: pink;
-}
-
-h2 {
+.green-h2 {
     color: #6b8e23; /* Оливково-зеленый заголовок */
     text-align: center
 }
 
-label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: bold;
+.black-h2 {
+    color: #1F0F14; /* Оливково-зеленый заголовок */
+    text-align: center
+}
+
+.pink-h2 {
+    color: #4B2C2C; /* Оливково-зеленый заголовок */
+    text-align: center
 }
 
 /* Стили для полей ввода */
@@ -105,7 +190,70 @@ input[type="password"]:focus {
 }
 
 /* Стили для кнопок */
-button[type="submit"] {
+.sakura-button[type="submit"] {
+    background-image: url('../img/button_sa.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    min-width: 100%;
+    aspect-ratio: 4/1;
+    padding: 12px 40%;
+    display: flex;
+    margin: 0 auto;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1em;
+    margin-bottom: 10px; 
+    transition: transform 0.1s ease-in-out; /* Плавная анимация */
+}
+
+.sakura-button[type="submit"]:active {
+    transform: scale(0.95); /* Сжатие при нажатии */
+}
+
+.space-button[type="submit"] {
+    background-image: url('../img/button_s.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    width: 100%;
+    aspect-ratio: 4/1;
+    padding: 12px 40%;
+    display: flex;
+    margin: 0 auto;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1em;
+    margin-bottom: 10px; 
+    transition: transform 0.1s ease-in-out; /* Плавная анимация */
+}
+
+.space-button[type="submit"]:active {
+    transform: scale(0.95); /* Сжатие при нажатии */
+}
+.olive-button[type="submit"] {
+    background-image: url('../img//button_g.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    min-width: 100%;
+    aspect-ratio: 4/1;
+    color: #fff; /* Белый текст */
+    padding: 12px 40%;
+    display: flex;
+    margin: 0 auto;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1em;
+    margin-bottom: 10px; 
+    transition: transform 0.1s ease-in-out; /* Плавная анимация */
+}
+
+.olive-button[type="submit"]:active {
+    transform: scale(0.95); /* Сжатие при нажатии */
+}
+
+.green-button[type="submit"] {
     background-color: #6b8e23; /* Оливково-зеленый фон */
     color: #fff; /* Белый текст */
     padding: 12px 20px;
@@ -118,7 +266,41 @@ button[type="submit"] {
     transition: transform 0.1s ease-in-out; /* Плавная анимация */
 }
 
-button[type="submit"]:active {
+.green-button[type="submit"]:active {
+    transform: scale(0.95); /* Сжатие при нажатии */
+}
+
+.pink-button[type="submit"] {
+    background-color: #4B2C2C; /* Оливково-зеленый фон */
+    color: #fff; /* Белый текст */
+    padding: 12px 20px;
+    display: flex;
+    margin: 0 auto;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: transform 0.1s ease-in-out; /* Плавная анимация */
+}
+
+.pink-button[type="submit"]:active {
+    transform: scale(0.95); /* Сжатие при нажатии */
+}
+
+.black-button[type="submit"] {
+    background-color: #1F0F14; /* Оливково-зеленый фон */
+    color: #fff; /* Белый текст */
+    padding: 12px 20px;
+    display: flex;
+    margin: 0 auto;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: transform 0.1s ease-in-out; /* Плавная анимация */
+}
+
+.black-button[type="submit"]:active {
     transform: scale(0.95); /* Сжатие при нажатии */
 }
 
@@ -134,15 +316,30 @@ a:hover {
 
 /* Стили для навигации */
 nav {
-    background-color: #ffffff; /* Белый фон для навигации */
+    
     padding: 10px 0;
-    border-top: 1px solid #6b8e23;
+    
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     position: fixed; /* Фиксированное положение */
     bottom: 0; /* Прижимаем к низу экрана */
     left: 0;
     width: 100%;
     z-index: 100; /* Обеспечиваем отображение поверх контента */
+}
+
+.green-bottom {
+    background-color: #F0F8E0; /* Белый фон для навигации */
+    border-top: 1px solid #6b8e23;
+}
+
+.black-bottom {
+    background-color: #3E2723; /* Белый фон для навигации */
+    border-top: 1px solid rgb(0, 0, 0);
+}
+
+.pink-bottom {
+    background-color: #F8E1E1; /* Белый фон для навигации */
+    border-top: 1px solid #97E0CC;
 }
 
 nav ul {
@@ -163,8 +360,20 @@ nav a {
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+
+.green-a {
     color: #333; /* Темно-серый цвет текста */
 }
+
+.pink-a {
+    color: #C22B54; /* Темно-серый цвет текста */
+}
+
+.black-a {
+    color: #D1C4E9; /* Темно-серый цвет текста */
+}
+
 
 nav img {
     width: 30px; /* Размер иконок */
@@ -192,7 +401,7 @@ nav img {
 }
 
 .pink-header {
-    background-color: pink; /* Розовый фон */
+    background-color: #FAD4D4; /* Розовый фон */
     padding: 20px;
     text-align: center;
     position: fixed; /* Фиксированное положение */
@@ -206,11 +415,11 @@ nav img {
 .pink-header h1 {
     margin: 0;
     text-align: center;
-    color: purple; /* Оливково-зеленый цвет заголовка */
+    color: #4B2C2C; /* Оливково-зеленый цвет заголовка */
 }
 
 .black-header {
-    background-color: grey; /* Розовый фон */
+    background-color: #9C4D67; /* Розовый фон */
     padding: 20px;
     text-align: center;
     position: fixed; /* Фиксированное положение */
@@ -224,9 +433,32 @@ nav img {
 .black-header h1 {
     margin: 0;
     text-align: center;
-    color: black; /* Оливково-зеленый цвет заголовка */
+    color: #1F0F14 ; /* Оливково-зеленый цвет заголовка */
 }
 
+.pink-label {
+    color: #493A3A;
+}
+
+.green-label {
+    color: #6B8E23;
+}
+
+.black-label {
+    color: #E0E0E0;
+}
+
+.green-p {
+    color: #6B8E23;
+}
+
+.black-p {
+    color: #E0E0E0;
+}
+
+.pink-p {
+    color: #493A3A;
+}
 /* Дополнительные стили для улучшения внешнего вида */
 .error {
     color: red;
@@ -248,7 +480,7 @@ nav img {
 }
 
 .time-value.faded {
-    color: #ccc; /* Более бледный цвет */
+    color: #000; /* Более бледный цвет */
 }
 
 .time-value.current {
