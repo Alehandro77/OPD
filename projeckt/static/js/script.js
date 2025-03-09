@@ -1,47 +1,43 @@
 document.addEventListener('DOMContentLoaded', function() {
     const form = document.querySelector('form');
     const formErrors = document.getElementById('form-errors');
-
+    // Добавляем проверку, существует ли форма на странице
     if (form) {
         form.addEventListener('submit', function(event) {
-            event.preventDefault(); // Предотвращаем стандартную отправку формы
+            event.preventDefault(); // Предотвратить стандартную отправку формы
 
-            const formData = new FormData(form);
-            const profileUrl = form.dataset.profileUrl;
+            const formData = new FormData(form); // Получить данные с формы как FormData
+            //const profileUrl = formData.get('profileUrl'); // Извлечь profileUrl из FormData  УДАЛИТЬ ЭТУ СТРОКУ
 
-            fetch(profileUrl, {
+            //fetch(profileUrl, { // Отправляем данные на URL profileUrl УДАЛИТЬ ЭТУ СТРОКУ
+            fetch('/profile', { // Отправляем данные на URL profile ИЗМЕНИТЬ ЭТУ СТРОКУ
                 method: 'POST',
-                body: formData,
+                body: formData
             })
-            .then(response => response.json())
+            .then(response => response.json()) // Преобразуем ответ в json
             .then(data => {
-                if (data.errors) {
-                    // Очищаем предыдущие ошибки под полями
-                    const errorSpans = document.querySelectorAll('.error');
-                    errorSpans.forEach(span => {
-                        span.textContent = '';
-                    });
+                if (data.errors) { // Если есть ошибки
+                    // Выводим предыдущие ошибки под полями
+                    const errorsDiv = document.querySelector(".error");
+                    errorsDiv.textContent = "";
 
-                    // Выводим ошибки под соответствующими полями
-                    for (const key in data.errors) {
-                        const errorSpan = document.getElementById(key + '-error');
+                    for (let key in data.errors) {
+                        let errorSpan = document.getElementById(key + "-error");
                         if (errorSpan) {
                             errorSpan.textContent = data.errors[key];
                         } else {
-                            // Если нет соответствующего элемента, выводим в общую ошибку
-                            const error = document.createElement('p');
-                            error.textContent = data.errors[key];
-                            formErrors.appendChild(error);
+                            // Если нет соответствующего элемента, выводим в общий блок
+                            errorsDiv.textContent += data.errors[key] + " ";
                         }
                     }
                 } else {
                     // Если ошибок нет, можно обновить страницу или показать сообщение об успехе
-                    formErrors.innerHTML = '<p>Данные успешно сохранены!</p>';
+                    errorsForm.innerHTML = "<p>Данные успешно сохранены!</p>";
                 }
             })
             .catch(error => {
                 console.error('Ошибка при отправке запроса:', error);
-                formErrors.innerHTML = '<p>Произошла ошибка при сохранении данных.</p>';
+                errorsForm.innerHTML = "<p>Ошибка при сохранении данных.</p>";
             });
         });
     }
