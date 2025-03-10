@@ -1,58 +1,65 @@
 document.addEventListener('DOMContentLoaded', function() {
-    function saveProfile() {
-        const form = document.getElementById('profileForm');
-        const formData = new FormData(form);
-    
-        const gender = document.getElementById('gender').value;
-        formData.append('gender', gender);
-    
-        fetch('/save_profile', {
-            method: 'POST',
-            body: formData,
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            return response.json();
-        })
-        .then(data => {
-            const errorMessagesElement = document.getElementById('error-messages'); // Получаем элемент для ошибок
-    
-            if (data.success) {
-                // Очищаем ошибки, если сохранение успешно
-                errorMessagesElement.innerHTML = '';
-                alert('Профиль успешно сохранен!');
-                window.location.reload();
-            } else {
-                // Обработка ошибок
-                console.error('Ошибка сохранения профиля:', data);
-                errorMessagesElement.innerHTML = ''; // Очищаем предыдущие ошибки
-    
-                if (data.errors) {
-                    // Предполагаем, что data.errors - это объект, где ключи - имена полей, а значения - массивы ошибок
-                    for (const field in data.errors) {
-                        if (data.errors.hasOwnProperty(field)) {
-                            const errors = data.errors[field];
-                            errors.forEach(error => {
-                                const errorElement = document.createElement('p');
-                                errorElement.textContent = `${field}: ${error}`; // Добавляем имя поля к сообщению
-                                errorMessagesElement.appendChild(errorElement);
-                            });
-                        }
-                    }
-                } else {
-                    // Если нет информации об ошибках, выводим общее сообщение
-                    errorMessagesElement.textContent = 'Произошла ошибка. Пожалуйста, попробуйте еще раз.';
-                }
-            }
-        })
-        .catch(error => {
-            console.error('Ошибка при отправке запроса:', error);
-            alert('Произошла ошибка при отправке запроса. Пожалуйста, попробуйте еще раз.');
-        });
-    }
+    const profileForm = document.getElementById('profileForm');
 
+    if (profileForm) {
+        function saveProfile() {
+            const form = document.getElementById('profileForm');
+            const formData = new FormData(form);
+
+            const gender = document.getElementById('gender').value;
+            formData.append('gender', gender);
+
+            fetch('/profile', {
+                method: 'POST',
+                body: formData,
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                const errorMessagesElement = document.getElementById('error-messages');
+
+                if (data.success) {
+                    errorMessagesElement.innerHTML = '';
+                    alert('Профиль успешно сохранен!');
+
+                    // Вызываем updateRecommendations, только если есть рекомендации
+                    if (data.json_list && Array.isArray(data.json_list)) {
+                        updateRecommendations(data.json_list);
+                    }
+
+                } else {
+                    // Обработка ошибок
+                    console.error('Ошибка сохранения профиля:', data);
+                    errorMessagesElement.innerHTML = '';
+                    if (data.errors) {
+                        for (const field in data.errors) {
+                            if (data.errors.hasOwnProperty(field)) {
+                                const errors = data.errors[field];
+                                errors.forEach(error => {
+                                    const errorElement = document.createElement('p');
+                                    errorElement.textContent = `${field}: ${error}`;
+                                    errorMessagesElement.appendChild(errorElement);
+                                });
+                            }
+                        }
+                    } else {
+                        errorMessagesElement.textContent = 'Произошла ошибка. Пожалуйста, попробуйте еще раз.';
+                    }
+                }
+            })
+            .catch(error => {
+                console.error('Ошибка при отправке запроса:', error);
+                alert('Произошла ошибка при отправке запроса. Пожалуйста, попробуйте еще раз.');
+            });
+        }
+
+        // Привязываем функцию saveProfile к глобальной области видимости, чтобы она была доступна из HTML
+        window.saveProfile = saveProfile;
+    }
 
     const timeSelectors = document.querySelectorAll('.time-selector');
 
