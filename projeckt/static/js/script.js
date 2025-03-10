@@ -1,66 +1,39 @@
-document.addEventListener('DOMContentLoaded', function() {
-    const profileForm = document.getElementById('profileForm');
-
+document.addEventListener('DOMContentLoaded', function() { // Ensure DOM is fully loaded  
+    // Добавляем обработчик события submit для формы профиля
+    const profileForm = document.querySelector('form[data-profile-url]');
     if (profileForm) {
-        function saveProfile() {
-            const form = document.getElementById('profileForm');
-            const formData = new FormData(form);
+        const profileUrl = profileForm.dataset.profileUrl; // Получаем URL из атрибута data-*
+        profileForm.addEventListener('submit', function(event) {
+            event.preventDefault(); // Предотвращаем отправку формы по умолчанию
 
-            const gender = document.getElementById('gender').value;
-            formData.append('gender', gender);
+            // Собираем данные из формы
+            const formData = new FormData(this);
 
-            fetch('/profile', {
+            // Отправляем данные на сервер с помощью Fetch API
+            fetch(profileUrl, { // Используем полученный URL
                 method: 'POST',
-                body: formData,
+                body: formData
             })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                return response.json();
-            })
+            .then(response => response.json()) // Преобразуем ответ в JSON
             .then(data => {
-                const errorMessagesElement = document.getElementById('error-messages');
-
-                if (data.success) {
-                    errorMessagesElement.innerHTML = '';
-                    alert('Профиль успешно сохранен!');
-
-                    // Вызываем updateRecommendations, только если есть рекомендации
-                    if (data.json_list && Array.isArray(data.json_list)) {
-                        updateRecommendations(data.json_list);
-                    }
-
-                } else {
-                    // Обработка ошибок
-                    console.error('Ошибка сохранения профиля:', data);
-                    errorMessagesElement.innerHTML = '';
-                    if (data.errors) {
-                        for (const field in data.errors) {
-                            if (data.errors.hasOwnProperty(field)) {
-                                const errors = data.errors[field];
-                                errors.forEach(error => {
-                                    const errorElement = document.createElement('p');
-                                    errorElement.textContent = `${field}: ${error}`;
-                                    errorMessagesElement.appendChild(errorElement);
-                                });
-                            }
-                        }
-                    } else {
-                        errorMessagesElement.textContent = 'Произошла ошибка. Пожалуйста, попробуйте еще раз.';
-                    }
+                // Обновляем рекомендации на странице (если находимся на главной странице)
+                if (document.getElementById("recommendations")) {
+                    updateRecommendations(data.bedtime);
                 }
+                // Перенаправляем пользователя обратно на страницу профиля
+                window.location.href = profileUrl;
+
             })
             .catch(error => {
-                console.error('Ошибка при отправке запроса:', error);
-                alert('Произошла ошибка при отправке запроса. Пожалуйста, попробуйте еще раз.');
+                console.error('Ошибка:', error);
+                alert('Произошла ошибка при обновлении рекомендаций.');
             });
-        }
-
-        // Привязываем функцию saveProfile к глобальной области видимости, чтобы она была доступна из HTML
-        window.saveProfile = saveProfile;
+        });
+    } else {
+        console.warn("Форма профиля не найдена на странице.");
     }
 
+    
     const timeSelectors = document.querySelectorAll('.time-selector');
 
     timeSelectors.forEach(selector => {
