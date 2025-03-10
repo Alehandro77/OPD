@@ -4,6 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_migrate import Migrate
 import datetime  # Импортируем модуль datetime
+import random
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'важный_секретный_ключ'  # Замените на что-то случайное!
@@ -114,7 +115,7 @@ def calculate_recommendations(age, weight, gender, height, wake_up_time_hours, w
     elif gender == "women":
         k_gender_m = 15
 
-    bedtime_minytes = (wake_up_time_minutes - (base_time_m + imt_kor_m + k_gender_m)) % 60
+    bedtime_minytes = (wake_up_time_minutes - (base_time_m + imt_kor_m + k_gender_m)) % 60 // 15 * 15
     k_bedtime_minytes = (wake_up_time_minutes - (base_time_m + imt_kor_m + k_gender_m)) // 60
     bedtime_hours = (wake_up_time_hours - base_time_h + k_bedtime_minytes)  % 24
 
@@ -213,7 +214,7 @@ def profile():
             age = int(request.form['age'])
             weight = float(request.form['weight'])
             height = int(request.form['height'])
-            gender = (request.form['gender'])
+            gender = request.form['gender']
             wake_up_time_monday_hours = int(request.form['wake_up_time_monday_hours'])
             wake_up_time_monday_minutes = int(request.form['wake_up_time_monday_minutes'])
             wake_up_time_tuesday_hours = int(request.form['wake_up_time_tuesday_hours'])
@@ -244,6 +245,12 @@ def profile():
             except ValueError:
                 errors['weight'] = "Вес должен быть числом."
 
+            try:
+                height = int(height)
+                if height <= 0:
+                    errors['height'] = "Рост должен быть положительным числом."
+            except ValueError:
+                errors['height'] = "Рост должен быть числом."
 
             # Если есть ошибки, возвращаем их в виде JSON
             if errors:
@@ -254,7 +261,7 @@ def profile():
                 age = int(age)
                 weight = float(weight)
                 height = int(height)
-                gender = (gender)
+                gender = gender
                 wake_up_time_monday_hours = int(wake_up_time_monday_hours)
                 wake_up_time_monday_minutes = int(wake_up_time_monday_minutes)
                 wake_up_time_tuesday_hours = int(wake_up_time_tuesday_hours)
@@ -296,9 +303,9 @@ def profile():
                 
             else:  # Создаем новый профиль
                 profile = UserProfile(
-                    age=age,
-                    weight=weight,
-                    height=height,
+                    age=int(age),
+                    weight=int(weight),
+                    height=int(height),
                     gender=gender,
                     wake_up_time_monday_hours=int(wake_up_time_monday_hours),  # Преобразуем в int
                     wake_up_time_monday_minutes=int(wake_up_time_monday_minutes),  # Преобразуем в int
@@ -452,6 +459,35 @@ def logout():
 @app.route('/')
 @login_required
 def index():
+    breakfast_fact_1 = "Завтрак – топливо для вашего дня. Он должен составлять около 25-30% от вашей суточной нормы калорий. Пропуск завтрака замедляет метаболизм, лишает вас энергии и может привести к перееданию в течение дня. Отдайте предпочтение сложным углеводам и белкам для устойчивого заряда бодрости."
+    breakfast_fact_2 = "Завтрак – ключ к концентрации. Он помогает стабилизировать уровень сахара в крови, что крайне важно для работы мозга. Без него сложно сосредоточиться и продуктивно работать. Включите в завтрак продукты, богатые клетчаткой и витаминами группы B."
+    breakfast_fact_3 = "Завтрак для поддержания формы. Исследования показывают, что люди, которые регулярно завтракают, реже страдают от лишнего веса. Завтрак активирует метаболические процессы и помогает контролировать аппетит в течение дня. Сделайте выбор в пользу белка и полезных жиров."
+    breakfast_fact_4 = "Начните день правильно. Завтрак – это возможность задать тон всему дню. Правильно подобранный завтрак обеспечивает организм необходимыми питательными веществами и создает хорошее настроение. Не пропускайте эту важную трапезу, даже если очень спешите."
+    breakfast_fact_5 = "Утренний ритуал здоровья. Завтрак – это не просто еда, это инвестиция в ваше здоровье и благополучие. Он укрепляет иммунитет, улучшает пищеварение и помогает бороться со стрессом. Сделайте завтрак вкусным и полезным ритуалом."
+    breakfast_fact_6 = "Завтрак как источник энергии. После ночного голодания организм нуждается в восполнении запасов энергии. Завтрак запускает процесс расщепления жиров и углеводов, обеспечивая вас топливом на несколько часов. Выбирайте продукты с высоким содержанием клетчатки."
+    breakfast_fact_7 = " Завтрак для улучшения настроения. Некоторые продукты, такие как яйца и овсянка, содержат вещества, которые способствуют выработке серотонина, гормона счастья. Начните день с полезного и вкусного завтрака, чтобы поднять себе настроение."
+    breakfast_fact_8 = " Завтрак – важный элемент здорового питания. Он обеспечивает организм витаминами, минералами и антиоксидантами, которые необходимы для нормального функционирования всех систем. Не забывайте включать в завтрак фрукты и овощи."
+    breakfast_fact_9 = "Утренний прием пищи и метаболизм. Завтрак способствует поддержанию здорового метаболизма, что особенно важно для людей, следящих за своим весом. Он помогает сжигать калории в течение дня и предотвращает замедление метаболизма."
+    breakfast_fact_10 = "Завтрак как профилактика заболеваний. Регулярный завтрак снижает риск развития сердечно-сосудистых заболеваний, диабета 2 типа и других хронических заболеваний. Правильный выбор продуктов для завтрака – залог здоровья на долгие годы."
+    breakfast_fact_11 = "Завтрак: Время для полезных жиров. Не бойтесь включать в завтрак полезные жиры, такие как авокадо, орехи или семена. Они помогают усваивать жирорастворимые витамины и поддерживают здоровье сердца. Они также способствуют чувству сытости."
+    breakfast_fact_12 = "Завтрак: Протеиновый заряд. Белок на завтрак способствует более длительному ощущению сытости и помогает контролировать аппетит до обеда. Яйца, йогурт, творог или протеиновый коктейль – отличные варианты."
+    breakfast_fact_13 = "Завтрак: Фокус на сложные углеводы. Избегайте простых углеводов, таких как сладости и выпечка, которые вызывают резкий скачок сахара в крови. Вместо этого выбирайте сложные углеводы, такие как овсянка, цельнозерновой хлеб или фрукты."
+    breakfast_fact_14 = "Завтрак: Источник клетчатки. Клетчатка помогает нормализовать пищеварение, снижает уровень холестерина и улучшает общее состояние здоровья. Овсянка, фрукты, овощи и цельнозерновые продукты богаты клетчаткой."
+    breakfast_fact_15 = "Завтрак: Время для творчества. Не бойтесь экспериментировать с разными рецептами и ингредиентами. Завтрак может быть не только полезным, но и вкусным и разнообразным."
+    breakfast_fact_16 = "Завтрак вне дома. Даже если вы не успеваете приготовить завтрак дома, всегда можно найти полезные варианты в кафе или магазине. Выбирайте йогурт, фрукты, смузи или цельнозерновые батончики."
+    breakfast_fact_17 = " Завтрак для спортсменов. Спортсменам особенно важно завтракать, чтобы обеспечить организм энергией для тренировок и восстановления после них. Завтрак должен быть богат углеводами и белками."
+    breakfast_fact_18 = "Завтрак для детей. Завтрак для детей должен быть особенно питательным и разнообразным, чтобы обеспечить их растущий организм всеми необходимыми веществами. Включите в завтрак фрукты, овощи, цельнозерновые продукты и белок."
+    breakfast_fact_19 = "Завтрак: Индивидуальный подход. Не существует универсального завтрака, подходящего всем. Выбирайте продукты, которые вам нравятся и хорошо усваиваются вашим организмом. Прислушивайтесь к своим ощущениям."
+    breakfast_fact_20 = "Завтрак и водный баланс. Не забывайте выпивать стакан воды перед завтраком, чтобы запустить пищеварительную систему и восполнить водный баланс после ночного сна. Это также помогает улучшить усвоение питательных веществ."
+
+    facts_list = [breakfast_fact_1, breakfast_fact_2, breakfast_fact_3, breakfast_fact_4,
+                            breakfast_fact_5, breakfast_fact_6, breakfast_fact_7, breakfast_fact_8,
+                            breakfast_fact_9, breakfast_fact_10, breakfast_fact_11, breakfast_fact_12,
+                            breakfast_fact_13, breakfast_fact_14, breakfast_fact_15, breakfast_fact_16,
+                            breakfast_fact_17, breakfast_fact_18, breakfast_fact_19, breakfast_fact_20]
+
+
+    sovet = random.choice(facts_list)
     user = User.query.get(current_user.id)
     color = user.color
     profile = current_user.profile
@@ -531,7 +567,8 @@ def index():
 
     return render_template('index.html', bedtime_hours=bedtime_hours, bedtime_minytes=bedtime_minytes, not_hours=not_hours, not_minytes=not_minytes,
                            breakfast_hours=breakfast_hours, breakfast_minutes=breakfast_minutes, breakfast_hours_up=breakfast_hours_up, breakfast_minutes_up=breakfast_minutes_up,
-                           lanch_hours=lanch_hours, lanch_minutes=lanch_minutes, lanch_hours_up=lanch_hours_up, diner=diner, diner_up=diner_up, color=color)
+                           lanch_hours=lanch_hours, lanch_minutes=lanch_minutes, lanch_hours_up=lanch_hours_up, diner=diner, diner_up=diner_up, color=color,
+                           sovet=sovet)
 
 
 if __name__ == "__main__":
