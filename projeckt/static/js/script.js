@@ -1,49 +1,55 @@
 document.addEventListener('DOMContentLoaded', function() {
-    const form = document.querySelector('form');
-    const formErrors = document.getElementById('form-errors');
-    // Получаем значение пола из выпадающего списка.  Важно получить его *до* очистки FormData
-    const gender = document.getElementById('gender').value;
-    const formData = new FormData(form); // Получить данные с формы как FormData
-
-    // Добавляем значение пола в FormData.
-    formData.append('gender', gender);
-    // Добавляем проверку, существует ли форма на странице
-    if (form) {
-        form.addEventListener('submit', function(event) {
-            event.preventDefault(); // Предотвратить стандартную отправку формы
-
-            //const profileUrl = formData.get('profileUrl'); // Извлечь profileUrl из FormData  УДАЛИТЬ ЭТУ СТРОКУ
-
-            //fetch(profileUrl, { // Отправляем данные на URL profileUrl УДАЛИТЬ ЭТУ СТРОКУ
-            fetch('/profile', { // Отправляем данные на URL profile ИЗМЕНИТЬ ЭТУ СТРОКУ
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json()) // Преобразуем ответ в json
-            .then(data => {
-                if (data.errors) { // Если есть ошибки
-                    // Выводим предыдущие ошибки под полями
-                    const errorsDiv = document.querySelector(".error");
-                    errorsDiv.textContent = "";
-
-                    for (let key in data.errors) {
-                        let errorSpan = document.getElementById(key + "-error");
-                        if (errorSpan) {
-                            errorSpan.textContent = data.errors[key];
-                        } else {
-                            // Если нет соответствующего элемента, выводим в общий блок
-                            errorsDiv.textContent += data.errors[key] + " ";
+    function saveProfile() {
+        const form = document.getElementById('profileForm');
+        const formData = new FormData(form);
+    
+        const gender = document.getElementById('gender').value;
+        formData.append('gender', gender);
+    
+        fetch('/save_profile', {
+            method: 'POST',
+            body: formData,
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            const errorMessagesElement = document.getElementById('error-messages'); // Получаем элемент для ошибок
+    
+            if (data.success) {
+                // Очищаем ошибки, если сохранение успешно
+                errorMessagesElement.innerHTML = '';
+                alert('Профиль успешно сохранен!');
+                window.location.reload();
+            } else {
+                // Обработка ошибок
+                console.error('Ошибка сохранения профиля:', data);
+                errorMessagesElement.innerHTML = ''; // Очищаем предыдущие ошибки
+    
+                if (data.errors) {
+                    // Предполагаем, что data.errors - это объект, где ключи - имена полей, а значения - массивы ошибок
+                    for (const field in data.errors) {
+                        if (data.errors.hasOwnProperty(field)) {
+                            const errors = data.errors[field];
+                            errors.forEach(error => {
+                                const errorElement = document.createElement('p');
+                                errorElement.textContent = `${field}: ${error}`; // Добавляем имя поля к сообщению
+                                errorMessagesElement.appendChild(errorElement);
+                            });
                         }
                     }
                 } else {
-                    // Если ошибок нет, можно обновить страницу или показать сообщение об успехе
-                    errorsForm.innerHTML = "<p>Данные успешно сохранены!</p>";
+                    // Если нет информации об ошибках, выводим общее сообщение
+                    errorMessagesElement.textContent = 'Произошла ошибка. Пожалуйста, попробуйте еще раз.';
                 }
-            })
-            .catch(error => {
-                console.error('Ошибка при отправке запроса:', error);
-                errorsForm.innerHTML = "<p>Ошибка при сохранении данных.</p>";
-            });
+            }
+        })
+        .catch(error => {
+            console.error('Ошибка при отправке запроса:', error);
+            alert('Произошла ошибка при отправке запроса. Пожалуйста, попробуйте еще раз.');
         });
     }
 
