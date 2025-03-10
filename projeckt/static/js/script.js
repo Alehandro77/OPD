@@ -1,12 +1,17 @@
 document.addEventListener('DOMContentLoaded', function() {
     const form = document.querySelector('form');
     const formErrors = document.getElementById('form-errors');
+    // Получаем значение пола из выпадающего списка.  Важно получить его *до* очистки FormData
+    const gender = document.getElementById('gender').value;
+    const formData = new FormData(form); // Получить данные с формы как FormData
+
+    // Добавляем значение пола в FormData.
+    formData.append('gender', gender);
     // Добавляем проверку, существует ли форма на странице
     if (form) {
         form.addEventListener('submit', function(event) {
             event.preventDefault(); // Предотвратить стандартную отправку формы
 
-            const formData = new FormData(form); // Получить данные с формы как FormData
             //const profileUrl = formData.get('profileUrl'); // Извлечь profileUrl из FormData  УДАЛИТЬ ЭТУ СТРОКУ
 
             //fetch(profileUrl, { // Отправляем данные на URL profileUrl УДАЛИТЬ ЭТУ СТРОКУ
@@ -41,6 +46,7 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
     }
+
 
     const timeSelectors = document.querySelectorAll('.time-selector');
 
@@ -90,7 +96,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    if (weightInput) {ы
+    if (weightInput) {
         weightInput.addEventListener('input', function() {
             validateNumber(this, 'weight-error', 'Вес должен быть числом.');
         });
