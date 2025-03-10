@@ -7,7 +7,7 @@
         <div class="{{color}}-container profile-page2">
             <h2 class="{{color}}-h2" >Профиль пользователя</h2>
             <div id="form-errors" class="error"></div>
-            <form method="post" action="{{ url_for('profile') }}" data-profile-url="{{ url_for('profile') }}">
+            <form method="post" id="profileForm" action="{{ url_for('profile') }}" data-profile-url="{{ url_for('profile') }}">
                 <div id="error-messages">
                     <label class="{{color}}-label" for="age">Возраст:</label><br>
                     <input type="number" id="age" name="age" value="{{ profile.age if profile else '' }}" required>
@@ -23,7 +23,7 @@
 
                     <label class="{{color}}-label" for="gender">Пол:</label><br>
                     <select id="gender" name="gender" required>
-                        <option value="" >Выберите ...</option>
+                        <option value="">Выберите ...</option>
                         <option value="men" {% if profile.gender == 'men' %}selected{% endif %}>Мужской</option>
                         <option value="women" {% if profile.gender == 'women' %}selected{% endif %}>Женский</option>
                     </select>
