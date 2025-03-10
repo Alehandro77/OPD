@@ -34,7 +34,7 @@ class UserProfile(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     age = db.Column(db.Integer)
     weight = db.Column(db.Float)  # Вес может быть дробным числом
-    gender = db.Column(db.String(5), nullable=False)
+    gender = db.Column(db.String(6))
     height = db.Column(db.Integer)
     wake_up_time_monday_hours = db.Column(db.Integer)  # Время пробуждения в понедельник
     wake_up_time_monday_minutes = db.Column(db.Integer)
