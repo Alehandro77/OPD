@@ -82,6 +82,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Добавляем обработчики событий для валидации в реальном времени
     const ageInput = document.getElementById('age');
     const weightInput = document.getElementById('weight');
+    const heightInput = document.getElementById('height');
 
     if (ageInput) {
         ageInput.addEventListener('input', function() {
@@ -89,9 +90,15 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    if (weightInput) {
+    if (weightInput) {ы
         weightInput.addEventListener('input', function() {
             validateNumber(this, 'weight-error', 'Вес должен быть числом.');
+        });
+    }
+
+    if (heightInput) {
+        heightInput.addEventListener('input', function() {
+            validateNumber(this, 'height-error', 'Рост должен быть числом.');
         });
     }
 
@@ -113,50 +120,4 @@ document.addEventListener('DOMContentLoaded', function() {
 }
 
 
-});
-
-document.addEventListener('DOMContentLoaded', function() {
-    const usernameInput = document.getElementById('username');
-    const usernameError = document.createElement('span');
-    usernameError.classList.add('error');
-    usernameInput.parentNode.appendChild(usernameError);
-
-    usernameInput.addEventListener('input', function() {
-        const username = this.value;
-
-        // Отправляем AJAX запрос на сервер
-        fetch('/check_username?username=' + username)
-            .then(response => response.json())
-            .then(data => {
-                if (data.exists) {
-                    usernameError.textContent = 'Пользователь с таким логином уже существует.';
-                } else {
-                    usernameError.textContent = '';
-                }
-            });
-    });
-});
-
-document.addEventListener('DOMContentLoaded', function() {
-    const loginForm = document.getElementById('login-form');
-    const loginError = document.getElementById('login-error');
-
-    loginForm.addEventListener('submit', function(event) {
-        event.preventDefault(); // Предотвращаем отправку формы по умолчанию
-
-        const formData = new FormData(loginForm); // Создаем объект FormData
-
-        fetch('/login', { // Отправляем AJAX запрос на сервер
-            method: 'POST',
-            body: formData
-        })
-        .then(response => response.json()) // Преобразуем ответ в JSON
-        .then(data => {
-            if (data.success) { // Если вход успешен
-                window.location.href = '/'; // Перенаправляем на главную страницу
-            } else { // Если вход не успешен
-                loginError.textContent = data.message; // Выводим сообщение об ошибке
-            }
-        });
-    });
 });
