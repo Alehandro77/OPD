@@ -6,19 +6,30 @@
     <title>Вход</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
-<body>
-    <div class="header">
+<body class="green-fon">
+    <div class="green-header">
         <h1>День в фокусе</h1>
     </div>
-    <div class="container">
-        <div class="container reg-page">
-            <h2>Вход</h2>
-            <form method="post" action="{{ url_for('login') }}">
-                <input type="text" name="username" placeholder="Имя пользователя" required><br><br>
-                <input type="password" name="password" placeholder="Пароль" required><br><br>
-                <button type="submit">Войти</button>
-            </form>
-            <p style="text-align:center">Еще нет аккаунта? <a href="{{ url_for('register') }}">Зарегистрироваться</a></p>
+    <div class="green-container">
+        <div class="green-container reg-page">
+            <div class="green-container reg-page2">
+                <h2 class="green-h2">Вход</h2>
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        <ul class="flashes">
+                            {% for category, message in messages %}
+                                <li class="{{ category }}">{{ message }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                {% endwith %}
+                <form method="post" action="{{ url_for('login') }}">
+                    <input type="text" name="username" placeholder="Имя пользователя" required><br><br>
+                    <input type="password" name="password" placeholder="Пароль" required><br><br>
+                    <button class="green-button" type="submit">Войти</button>
+                </form>
+                <p style="text-align:center">Еще нет аккаунта? <a href="{{ url_for('register') }}">Зарегистрироваться</a></p>
+            </div>
         </div>  
     </div>  
 </body>
