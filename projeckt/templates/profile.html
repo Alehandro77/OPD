@@ -24,8 +24,8 @@
                     <label class="{{color}}-label" for="gender">Пол:</label><br>
                     <select id="gender" name="gender" required>
                         <option value="">Выберите ...</option>
-                        <option value="men" {% if profile.gender == 'men' %}selected{% endif %}>Мужской</option>
-                        <option value="women" {% if profile.gender == 'women' %}selected{% endif %}>Женский</option>
+                        <option value="men" {% if profile %} {% if profile.gender == 'men' %}selected{% endif %} {% endif %}>Мужской</option>
+                        <option value="women" {% if profile %} {% if profile.gender == 'women' %}selected{% endif %} {% endif %}>Женский</option>
                     </select>
                     <span id="gender-error" class="error"></span><br><br>
 
