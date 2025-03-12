@@ -1,23 +1,81 @@
-{% extends "layout.html" %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Настройки</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="{{color}}-fon">
 
-{% block title %}Настройки{% endblock %}
+    <div class="{{color}}-header">
+        <div class="snowblock"></div>
+        <h1>День в фокусе</h1>
+    </div>
 
-{% block content %}
-    <div class="container index-page">
-        <h2>Настройки</h2>
-        <p class="{{color}}-text">Какую тему для сайта вы хотите выбрать?</p>
-        <form method="post" action="/settings">
-            <input type="hidden" name="color" value="green">
-            <button type="submit">Нажми меня</button>
-        </form>
-        <form method="post" action="/settings">
-            <input type="hidden" name="color" value="pink">
-            <button type="submit">Нажми меня</button>
-        </form>
-        <form method="post" action="/settings">
-            <input type="hidden" name="color" value="black">
-            <button type="submit">Нажми меня</button>
-        </form>
+    <div class="{{color}}-container">
+        <div class="{{color}}-container {{color}}-settings-page">
+            <div class="{{color}}-container settings-page2">
+                <h2 class="{{color}}-h2" >Настройки</h2>
+                <p class="{{color}}-p">Какую тему для сайта вы хотите выбрать?</p>
+                <form method="post" action="/settings">
+                    <input type="hidden" name="color" value="green">
+                    <button class="olive-button" type="submit"></button>
+                </form>
+                <form method="post" action="/settings">
+                    <input type="hidden" name="color" value="pink">
+                    <button class="sakura-button"  type="submit"></button>
+                </form>
+                <form method="post" action="/settings">
+                    <input type="hidden" name="color" value="black">
+                    <button class="space-button" type="submit"></button>
+                </form>
+                <p class="note"></p>
+            </div>
+        </div>
+    </div>
+    <div class="exit-conteiner">
         <a class="exit" href="{{ url_for('logout') }}">Выйти из аккаунта?</a>
     </div>
-{% endblock %}
+    <nav class="{{color}}-bottom">
+        <ul>
+            <li>
+                <a class="{{color}}-a" href="{{ url_for('index') }}">
+                    {% if color == 'green' %}
+                        <img src="{{ url_for('static', filename='img/green_home.svg') }}" alt="Профиль" width="32" height="32">
+                    {% elif color == 'pink' %}
+                        <img src="{{ url_for('static', filename='img/pink_home.svg') }}" alt="Профиль" width="32" height="32">
+                    {% elif color == 'black' %}
+                        <img src="{{ url_for('static', filename='img/black_home.svg') }}" alt="Профиль" width="32" height="32">
+                    {% endif %}
+                    Главная
+                </a>
+            </li>
+            <li>
+                <a class="{{color}}-a" href="{{ url_for('profile') }}">
+                    {% if color == 'green' %}
+                        <img src="{{ url_for('static', filename='img/green_profile.svg') }}" alt="Профиль" width="32" height="32">
+                    {% elif color == 'pink' %}
+                        <img src="{{ url_for('static', filename='img/pink_profile.svg') }}" alt="Профиль" width="32" height="32">
+                    {% elif color == 'black' %}
+                        <img src="{{ url_for('static', filename='img/black_profile.svg') }}" alt="Профиль" width="32" height="32">
+                    {% endif %}
+                    Профиль
+                </a>
+            </li>
+            <li>
+                <a class="{{color}}-a" href="{{ url_for('settings') }}">
+                    {% if color == 'green' %}
+                        <img src="{{ url_for('static', filename='img/green_settings.svg') }}" alt="Профиль" width="32" height="32">
+                    {% elif color == 'pink' %}
+                        <img src="{{ url_for('static', filename='img/pink_settings.svg') }}" alt="Профиль" width="32" height="32">
+                    {% elif color == 'black' %}
+                        <img src="{{ url_for('static', filename='img/black_settings.svg') }}" alt="Профиль" width="32" height="32">
+                    {% endif %}
+                    Настройки
+                </a>
+            </li>
+        </ul>
+    </nav>
+</body>
+</html>
