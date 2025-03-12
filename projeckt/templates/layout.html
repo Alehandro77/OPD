@@ -6,33 +6,51 @@
     <title>{% block title %}{% endblock %}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
-<body>
-    <div class="snowblock"></div>
+<body class="{{color}}-fon">
     <div class="{{color}}-header">
+        <div class="snowblock"></div>
         <h1>День в фокусе</h1>
     </div>
 
-    <div class="container">
+    <div class="{{color}}-container">
         {% block content %}{% endblock %}
     </div>
 
-    <nav>
+    <nav class="{{color}}-bottom">
         <ul>
             <li>
-                <a href="{{ url_for('index') }}">
-                    <img src="{{ url_for('static', filename='img/home.png') }}" alt="Главная" width="32" height="32">
+                <a class="{{color}}-a" href="{{ url_for('index') }}">
+                    {% if color == 'green' %}
+                        <img src="{{ url_for('static', filename='img/green_home.svg') }}" alt="Профиль" width="32" height="32">
+                    {% elif color == 'pink' %}
+                        <img src="{{ url_for('static', filename='img/pink_home.svg') }}" alt="Профиль" width="32" height="32">
+                    {% elif color == 'black' %}
+                        <img src="{{ url_for('static', filename='img/black_home.svg') }}" alt="Профиль" width="32" height="32">
+                    {% endif %}
                     Главная
                 </a>
             </li>
             <li>
-                <a href="{{ url_for('profile') }}">
-                    <img src="{{ url_for('static', filename='img/profile.png') }}" alt="Профиль" width="32" height="32">
+                <a class="{{color}}-a" href="{{ url_for('profile') }}">
+                    {% if color == 'green' %}
+                        <img src="{{ url_for('static', filename='img/green_profile.svg') }}" alt="Профиль" width="32" height="32">
+                    {% elif color == 'pink' %}
+                        <img src="{{ url_for('static', filename='img/pink_profile.svg') }}" alt="Профиль" width="32" height="32">
+                    {% elif color == 'black' %}
+                        <img src="{{ url_for('static', filename='img/black_profile.svg') }}" alt="Профиль" width="32" height="32">
+                    {% endif %}
                     Профиль
                 </a>
             </li>
             <li>
-                <a href="{{ url_for('settings') }}">
-                    <img src="{{ url_for('static', filename='img/logout.png') }}" alt="Настройки" width="32" height="32">
+                <a class="{{color}}-a" href="{{ url_for('settings') }}">
+                    {% if color == 'green' %}
+                        <img src="{{ url_for('static', filename='img/green_settings.svg') }}" alt="Профиль" width="32" height="32">
+                    {% elif color == 'pink' %}
+                        <img src="{{ url_for('static', filename='img/pink_settings.svg') }}" alt="Профиль" width="32" height="32">
+                    {% elif color == 'black' %}
+                        <img src="{{ url_for('static', filename='img/black_settings.svg') }}" alt="Профиль" width="32" height="32">
+                    {% endif %}
                     Настройки
                 </a>
             </li>
