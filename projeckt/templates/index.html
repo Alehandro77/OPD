@@ -3,13 +3,29 @@
 {% block title %}Главная страница{% endblock %}
 
 {% block content %}
-    <div class="container index-page">
-        <h2>Рекомендации</h2>
-            {% if bedtime_hours is not none and bedtime_minytes is not none %}
-                <p>Рекомендуемое время отхода ко сну: <span id="bedtime">{{ "%02d:%02d"|format(bedtime_hours, bedtime_minytes) }}</span></p>
+    <div class="{{color}}-container {{color}}-index-page">
+        <div class="{{color}}-container {{color}}-index-page2">
+            <h2 class="{{color}}-h2" >Рекомендации</h2>
+            {% if bedtime_hours is not none and bedtime_minytes is not none and not_hours is not none and not_minytes is not none%}
+                <p class="{{color}}-p"><span id="bedtime">{{ "%02d:%02d"|format(breakfast_hours, breakfast_minutes) }}</span> - <span id="bedtime">{{ "%02d:%02d"|format(breakfast_hours_up, breakfast_minutes_up) }}</span> - Завтрак</p>
+                <p class="{{color}}-p"><span id="bedtime">{{ "%02d:%02d"|format(lanch_hours, lanch_minutes) }}</span> - <span id="bedtime">{{ "%02d:%02d"|format(lanch_hours_up, lanch_minutes) }}</span> - Обед </p>
+                <p class="{{color}}-p"><span id="bedtime">{{ "%02d:%02d"|format(diner, bedtime_minytes) }}</span> - <span id="bedtime">{{ "%02d:%02d"|format(diner_up, bedtime_minytes) }}</span> - Ужин</p>
+                <p class="{{color}}-p"><span id="bedtime">{{ "%02d:%02d"|format(not_hours, not_minytes) }}</span> - Пора готовиться ко сну</p>
+                <p class="{{color}}-p"><span id="bedtime">{{ "%02d:%02d"|format(bedtime_hours, bedtime_minytes) }}</span> - Всремя отхода ко сну</p>
             {% else %}
-                <p>Пожалуйста, заполните свой профиль, чтобы получить рекомендации.</p>
+                <p class="{{color}}-p">Пожалуйста, заполните свой профиль, чтобы получить рекомендации.</p>
             {% endif %}
         </div>
+    </div>
+
+    <div class="{{color}}-container">
+        <div class="{{color}}-container {{color}}-sovet-page">
+            <h2 class="{{color}}-h2" >Советик</h2>
+            <div class="{{color}}-container {{color}}-sovet-page2">
+                <p class="{{color}}-sovet">{{sovet}}</p>
+            </div>
+        </div>
+    </div>
+
 {% endblock %}
 
