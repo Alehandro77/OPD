@@ -21,86 +21,77 @@
     }
 }
 
+:root {
+    --vh: 100vh;
+}
+
+html {
+    margin: 0;
+    padding: 0;
+}
+
+
 body {
     font-family: Arial, sans-serif;
     font-weight: bold;
-    margin: 0;
-    padding: 0;
     color: #333; /* Темно-серый текст */
+    background-attachment: fixed; /* Или scroll, если хотите, чтобы фон прокручивался */
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    min-height: 100vh; /* fallback */
+    min-height: calc(var(--vh, 1vh) * 100);
 }
+
 
 .green-fon {
     background-image: url('../img/fon_olive.jpg');
-    margin: 0;
-    padding: 0;
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-attachment: fixed; /* Или scroll, если хотите, чтобы фон прокручивался */
-    height: 100vh; /* Устанавливает высоту на 100% высоты окна */
 }
 
 .black-fon {
     background-image: url('../img/fon_spase2.jpg');
-    margin: 0;
-    padding: 0;
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-attachment: fixed; /* Или scroll, если хотите, чтобы фон прокручивался */
-    height: 100vh; /* Устанавливает высоту на 100% высоты окна */
 }
 
 .pink-fon {
     background-image: url('../img/fon_sakyra.jpg');
-    margin: 0;
-    padding: 0;
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-attachment: fixed; /* Или scroll, если хотите, чтобы фон прокручивался */
-    height: 100vh; /* Устанавливает высоту на 100% высоты окна */
 }
 
 .green-container {
     max-width: 800px;
     margin: 0 auto;
     padding: 20px;
-    background-color: rgba(31,	110,	125, 0); /* Белый фон для контента */
-    border-radius: 5px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Легкая тень */
+    border-radius: 25px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); /* Легкая тень */
 }
 
 .black-container {
     max-width: 800px;
     margin: 0 auto;
     padding: 20px;
-    background-color: rgba(31,	110,	125, 0); /* Белый фон для контента */
-    border-radius: 5px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Легкая тень */
+    border-radius: 25px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); /* Легкая тень */
 }
 
 .pink-container {
     max-width: 800px;
     margin: 0 auto;
     padding: 20px;
-    background-color: rgba(31,	110,	125, 0); /* Белый фон для контента */
-    border-radius: 5px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Легкая тень */
+    border-radius: 25px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); /* Легкая тень */
 }
 
 .green-index-page {
-    padding-top: 70px; /* Отступ сверху для главной страницы */
+    padding-top: 45px; /* Отступ сверху для главной страницы */
     background-color: rgba(	217,	234,	211, 0.8);
 }
 
 .pink-index-page {
-    padding-top: 70px; /* Отступ сверху для главной страницы */
+    padding-top: 45px; /* Отступ сверху для главной страницы */
     background-color: rgba(244,	194,	194, 0.8);
 }
 
 .black-index-page {
-    padding-top: 70px; /* Отступ сверху для главной страницы */
+    padding-top: 45px; /* Отступ сверху для главной страницы */
     background-color: rgba(156, 77, 103, 0.8);
 }
 
@@ -121,20 +112,38 @@ body {
 
 .black-profile-page {
     padding-top: 40px; /* Отступ сверху для страницы профиля */
-    padding-bottom: 75px; /* Отступ снизу для страницы профиля */
+    padding-bottom: 50px; /* Отступ снизу для страницы профиля */
     background-color: rgba(156, 77, 103, 0.8);
 }
 
 .pink-profile-page {
     padding-top: 40px; /* Отступ сверху для страницы профиля */
-    padding-bottom: 75px; /* Отступ снизу для страницы профиля */
+    padding-bottom: 50px; /* Отступ снизу для страницы профиля */
     background-color: rgba(244,	194,	194, 0.8);
 }
 
 .green-profile-page {
     padding-top: 40px; /* Отступ сверху для страницы профиля */
-    padding-bottom: 75px; /* Отступ снизу для страницы профиля */
+    padding-bottom: 50px; /* Отступ снизу для страницы профиля */
     background-color: rgba(	217,	234,	211, 0.8);
+}
+
+.green-sovet-page{
+    padding-top: 25px; /* Отступ сверху для главной страницы */
+    padding-bottom: 25px; /* Отступ снизу для страницы профиля */
+    background-color: rgba(217,234,211,0.8);
+}
+
+.pink-sovet-page{
+    padding-top: 25px; /* Отступ сверху для главной страницы */
+    padding-bottom: 25px; /* Отступ снизу для страницы профиля */
+    background-color: rgba(244,	194,	194, 0.8);
+}
+
+.black-sovet-page{
+    padding-top: 25px; /* Отступ сверху для главной страницы */
+    padding-bottom: 25px; /* Отступ снизу для страницы профиля */
+    background-color: rgba(156, 77, 103, 0.8);
 }
 
 .reg-page{
@@ -142,15 +151,71 @@ body {
     padding-top: 30px; /* Отступ сверху для страницы профиля */
 }
 
-.exit {
-    border: 1px solid red; /* Параметры рамки */
+.exit-conteiner{
+    padding-bottom: 90px; /* Оставьте, если нужно пространство снизу */
+    position: relative; /* Важно для позиционирования дочернего элемента */
+    width: 100%; /* Занимает всю ширину родительского контейнера */
+    min-height: 300px; /* Минимальная высота контейнера, чтобы вместить кнопку.  Отрегулируйте! */
     display: flex;
-    margin-top: 75px;
+    justify-content: center; /* Центрирование по горизонтали */
+}
+
+.green-exit {
+    border: 1px solid red; /* Параметры рамки */
+    position: absolute; /* Позиционирование абсолютно */
+    bottom: 90px; /* Отступ от нижней границы. Отрегулируйте! */
+    left: 50%; /* Сдвинуть влево на половину ширины родителя */
+    transform: translateX(-50%); /* Сдвинуть влево на половину собственной ширины */
+    aspect-ratio: 7/1;
+    width: 300px;
     padding: 10px 10px; /* Пространство от рамки до текста по горизонтали и вертикали */
-    border-radius: 4px; /* Радиус скругления углов */
-    background-color: pink;
+    border-radius: 25px; /* Радиус скругления углов */
+    background-color: rgba(217,234,211, 0.8);
     color: red;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     text-align: center;
+}
+
+.black-exit {
+    border: 1px solid red; /* Параметры рамки */
+    position: absolute; /* Позиционирование абсолютно */
+    bottom: 90px; /* Отступ от нижней границы. Отрегулируйте! */
+    left: 50%; /* Сдвинуть влево на половину ширины родителя */
+    transform: translateX(-50%); /* Сдвинуть влево на половину собственной ширины */
+    aspect-ratio: 7/1;
+    width: 300px;
+    padding: 10px 10px; /* Пространство от рамки до текста по горизонтали и вертикали */
+    border-radius: 25px; /* Радиус скругления углов */
+    background-color: rgba(244,194,194, 0.8);
+    color: red;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;    
+}
+
+.pink-exit {
+    border: 1px solid red; /* Параметры рамки */
+    position: absolute; /* Позиционирование абсолютно */
+    bottom: 90px; /* Отступ от нижней границы. Отрегулируйте! */
+    left: 50%; /* Сдвинуть влево на половину ширины родителя */
+    transform: translateX(-50%); /* Сдвинуть влево на половину собственной ширины */
+    aspect-ratio: 7/1;
+    width: 300px;
+    padding: 10px 10px; /* Пространство от рамки до текста по горизонтали и вертикали */
+    border-radius: 25px; /* Радиус скругления углов */
+    background-color: rgba(244,194,194, 0.8);
+    color: red;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+#container{
+    box-shadow: 0 0 0px rgba(0, 0, 0, 0);
 }
 
 .green-h2 {
@@ -189,6 +254,22 @@ input[type="password"]:focus {
     box-shadow: 0 0 5px rgba(107, 142, 35, 0.5); /* Легкая тень при фокусе */
 }
 
+select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc; /* Серая граница */
+    border-radius: 4px;
+    box-sizing: border-box; /* Важно для правильной ширины */
+    background-color: #f8f8ff; /* Светло-серый фон */
+}
+
+select :focus{
+    outline: none;
+    border-color: #6b8e23; /* Оливково-зеленая граница при фокусе */
+    box-shadow: 0 0 5px rgba(107, 142, 35, 0.5); /* Легкая тень при фокусе */
+}
+
 /* Стили для кнопок */
 .sakura-button[type="submit"] {
     background-image: url('../img/button_sa.png');
@@ -200,11 +281,12 @@ input[type="password"]:focus {
     display: flex;
     margin: 0 auto;
     border: none;
-    border-radius: 4px;
+    border-radius: 25px;
     cursor: pointer;
     font-size: 1em;
     margin-bottom: 10px; 
     transition: transform 0.1s ease-in-out; /* Плавная анимация */
+    -webkit-tap-highlight-color: transparent; /* То же самое, что и прозрачный цвет */
 }
 
 .sakura-button[type="submit"]:active {
@@ -221,11 +303,12 @@ input[type="password"]:focus {
     display: flex;
     margin: 0 auto;
     border: none;
-    border-radius: 4px;
+    border-radius: 25px;
     cursor: pointer;
     font-size: 1em;
     margin-bottom: 10px; 
     transition: transform 0.1s ease-in-out; /* Плавная анимация */
+    -webkit-tap-highlight-color: transparent; /* То же самое, что и прозрачный цвет */
 }
 
 .space-button[type="submit"]:active {
@@ -242,11 +325,12 @@ input[type="password"]:focus {
     display: flex;
     margin: 0 auto;
     border: none;
-    border-radius: 4px;
+    border-radius: 25px;
     cursor: pointer;
     font-size: 1em;
     margin-bottom: 10px; 
     transition: transform 0.1s ease-in-out; /* Плавная анимация */
+    -webkit-tap-highlight-color: transparent; /* То же самое, что и прозрачный цвет */
 }
 
 .olive-button[type="submit"]:active {
@@ -260,10 +344,11 @@ input[type="password"]:focus {
     display: flex;
     margin: 0 auto;
     border: none;
-    border-radius: 4px;
+    border-radius: 25px;
     cursor: pointer;
     font-size: 1em;
     transition: transform 0.1s ease-in-out; /* Плавная анимация */
+    -webkit-tap-highlight-color: transparent; /* То же самое, что и прозрачный цвет */
 }
 
 .green-button[type="submit"]:active {
@@ -277,10 +362,11 @@ input[type="password"]:focus {
     display: flex;
     margin: 0 auto;
     border: none;
-    border-radius: 4px;
+    border-radius: 25px;
     cursor: pointer;
     font-size: 1em;
     transition: transform 0.1s ease-in-out; /* Плавная анимация */
+    -webkit-tap-highlight-color: transparent; /* То же самое, что и прозрачный цвет */
 }
 
 .pink-button[type="submit"]:active {
@@ -294,10 +380,11 @@ input[type="password"]:focus {
     display: flex;
     margin: 0 auto;
     border: none;
-    border-radius: 4px;
+    border-radius: 25px;
     cursor: pointer;
     font-size: 1em;
     transition: transform 0.1s ease-in-out; /* Плавная анимация */
+    -webkit-tap-highlight-color: transparent; /* То же самое, что и прозрачный цвет */
 }
 
 .black-button[type="submit"]:active {
@@ -308,6 +395,8 @@ input[type="password"]:focus {
 a {
     color: #6b8e23; /* Оливково-зеленый цвет ссылок */
     text-decoration: none;
+    -webkit-tap-highlight-color: transparent; /* То же самое, что и прозрачный цвет */
+
 }
 
 a:hover {
@@ -316,9 +405,7 @@ a:hover {
 
 /* Стили для навигации */
 nav {
-    
     padding: 10px 0;
-    
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     position: fixed; /* Фиксированное положение */
     bottom: 0; /* Прижимаем к низу экрана */
@@ -349,11 +436,17 @@ nav ul {
     display: flex;
     justify-content: space-around; /* Равномерное распределение элементов */
     align-items: center; /* Выравнивание по вертикали */
-    height: 60px; /* Фиксированная высота навигации */
+    height: 50px; /* Фиксированная высота навигации */
 }
 
 nav li {
     text-align: center;
+    display: inline-block; /* Важно для transform */
+    transition: transform 0.1s ease-in-out; /* Короткая длительность для эффекта нажатия */
+}
+
+nav li:active {
+    transform: scale(0.9); /* Уменьшаем размер при нажатии (active state) */
 }
 
 nav a {
@@ -362,8 +455,10 @@ nav a {
     align-items: center;
 }
 
+
 .green-a {
     color: #333; /* Темно-серый цвет текста */
+
 }
 
 .pink-a {
@@ -374,17 +469,17 @@ nav a {
     color: #D1C4E9; /* Темно-серый цвет текста */
 }
 
-
 nav img {
     width: 30px; /* Размер иконок */
     height: 30px;
     margin-bottom: 5px;
+    
 }
 
 /* Стили для верхнего блока */
 .green-header {
     background-color: #f5f5dc; /* Бежевый фон */
-    padding: 20px;
+    padding: 15px;
     text-align: center;
     position: fixed; /* Фиксированное положение */
     top: 0; /* Прижимаем к верху экрана */
@@ -402,7 +497,7 @@ nav img {
 
 .pink-header {
     background-color: #FAD4D4; /* Розовый фон */
-    padding: 20px;
+    padding: 15px;
     text-align: center;
     position: fixed; /* Фиксированное положение */
     top: 0; /* Прижимаем к верху экрана */
@@ -420,7 +515,7 @@ nav img {
 
 .black-header {
     background-color: #9C4D67; /* Розовый фон */
-    padding: 20px;
+    padding: 15px;
     text-align: center;
     position: fixed; /* Фиксированное положение */
     top: 0; /* Прижимаем к верху экрана */
@@ -459,6 +554,25 @@ nav img {
 .pink-p {
     color: #493A3A;
 }
+
+.green-sovet {
+    text-align:center;
+}
+
+.pink-sovet {
+    text-align:center;
+    color: #493A3A;
+}
+
+.black-sovet {
+    text-align:center;
+    color: #E0E0E0;
+}
+
+.note{
+    font-size: 10px;
+}
+
 /* Дополнительные стили для улучшения внешнего вида */
 .error {
     color: red;
@@ -481,10 +595,18 @@ nav img {
 
 .time-value.faded {
     color: #000; /* Более бледный цвет */
+    display: inline-block;
+    transition: transform 0.1s ease-in-out;
+    -webkit-tap-highlight-color: transparent; /* То же самое, что и прозрачный цвет */
 }
+
+.time-value.faded:active {
+    transform: scale(0.9);
+  }
 
 .time-value.current {
     font-weight: bold;
+
 }
 
 .time-separator {
@@ -503,5 +625,29 @@ nav img {
     background-color: #ffe6e6;
     padding: 10px;
     border: 1px solid red;
+    border-radius: 4px;
+}
+
+.flashes li.green-good {
+    color: green;
+    background-color: palegreen;
+    padding: 10px;
+    border: 1px solid green;
+    border-radius: 4px;
+}
+
+.flashes li.pink-good {
+    color: #614D4D;
+    background-color: #C39B9B;
+    padding: 10px;
+    border: 1px solid #614D4D;
+    border-radius: 4px;
+}
+
+.flashes li.black-good {
+    color: #301820;
+    background-color: #824056;
+    padding: 10px;
+    border: 1px solid #301820;
     border-radius: 4px;
 }
